@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_kohort_bumil" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="375"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2,
+$P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'LEVEL_NAME' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'KEPALA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+(SELECT P.PROVINSI FROM sys_setting S INNER JOIN mst_provinsi  P
+ON S.KEY_VALUE=P.KD_PROVINSI WHERE
+S.KEY_DATA = 'PROVINSI' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS PROVINSI,
+(SELECT P.KABUPATEN FROM sys_setting S INNER JOIN mst_kabupaten  P
+ON S.KEY_VALUE=P.KD_KABUPATEN WHERE
+S.KEY_DATA = 'KABUPATENKOTA' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KABKOTA,
+(SELECT P.KECAMATAN FROM sys_setting S INNER JOIN mst_kecamatan  P
+ON S.KEY_VALUE=P.KD_KECAMATAN WHERE
+S.KEY_DATA = 'KECAMATAN' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KECAMATAN,
+ '' AS 'PUSTU_YG_ADA',
+ '' AS 'YANG_LAPOR',
+ 'DARI PARAMETER PHP' AS 'TAHUN',
+ '' AS 'NAMA_MENGETAHUI',
+ '' AS 'NIP_MENGETAHUI',
+ '' AS 'LOKASI',
+ 'TANGGAL HARI INI' AS 'TANGGAL',
+ '' AS 'NAMA_PELAPOR',
+ '' AS 'NIP_PELAPOR',
+ X.KD_PUSKESMAS, X.KD_PELAYANAN, X.KD_PASIEN, (SELECT CONCAT(X.NAMA_DEPAN," ",X.NAMA_TENGAH," ",X.NAMA_BELAKANG)) AS NAMA_PASIEN,
+(IF(X.KD_JENIS_KELAMIN='L','LAKI-LAKI','PEREMPUAN')) AS 'JNS_KELAMIN',
+ X.TGL_LAHIR, X.NAMA_AYAH,X.KD_KELURAHAN,
+(IF(X.VAKSIN='T0',X.TGL_PELAYANAN,0)) AS 'TT0',
+(IF(X.VAKSIN='T1',X.TGL_PELAYANAN,0)) AS 'TT1',
+(IF(X.VAKSIN='T2',X.TGL_PELAYANAN,0)) AS 'TT2',
+(IF(X.VAKSIN='T3',X.TGL_PELAYANAN,0)) AS 'TT3',
+(IF(X.VAKSIN='T4',X.TGL_PELAYANAN,0)) AS 'TT4',
+(IF(X.VAKSIN='T5',X.TGL_PELAYANAN,0)) AS 'TT5'
+ FROM
+(SELECT P.KD_PASIEN, P.NAMA_DEPAN, P.NAMA_TENGAH, P.NAMA_BELAKANG, P.KD_JENIS_KELAMIN, P.TGL_LAHIR, P.NAMA_AYAH, N.KD_PELAYANAN , N.TGL_PELAYANAN,N.KD_PUSKESMAS,P.KD_KELURAHAN,
+(SELECT K.HASIL
+FROM pel_hasil_kia K
+WHERE K.KD_PUSKESMAS=$P{parameter1}
+AND K.VARIABEL_ID='CL_FETEXTTSTAT'
+AND K.KD_PELAYANAN=N.KD_PELAYANAN
+) AS VAKSIN
+FROM
+(SELECT P.KD_PASIEN, P.KD_PUSKESMAS, P.NAMA_DEPAN, P.NAMA_TENGAH, P.NAMA_BELAKANG, P.KD_JENIS_KELAMIN, P.TGL_LAHIR, P.NAMA_AYAH,
+(SELECT mst_kelurahan.KELURAHAN FROM mst_kelurahan WHERE  mst_kelurahan.KD_KELURAHAN=P.KD_KELURAHAN
+AND P.KD_KECAMATAN = (SELECT KEY_VALUE FROM sys_setting WHERE PUSKESMAS = $P{parameter1} AND KEY_DATA = 'KECAMATAN')) AS 'KD_KELURAHAN'
+FROM pasien P
+WHERE P.KD_PUSKESMAS=$P{parameter1}
+AND P.KD_KECAMATAN = (SELECT KEY_VALUE FROM sys_setting WHERE PUSKESMAS = $P{parameter1} AND KEY_DATA = 'KECAMATAN')
+ )P
+INNER JOIN
+(SELECT N.KD_PELAYANAN, N.TGL_PELAYANAN , N.KD_PASIEN,N.KD_PUSKESMAS
+FROM pelayanan N
+WHERE N.TGL_PELAYANAN
+BETWEEN $P{date1} AND $P{date2}
+AND N.KD_PUSKESMAS=$P{parameter1}
+AND N.KEADAAN_KELUAR='DILAYANI'
+)N
+ON (P.KD_PASIEN=N.KD_PASIEN)
+WHERE N.TGL_PELAYANAN
+BETWEEN $P{date1} AND $P{date2}
+AND N.KD_PUSKESMAS = $P{parameter1}
+ ORDER BY N.KD_PELAYANAN
+)X
+WHERE X.TGL_PELAYANAN
+BETWEEN $P{date1} AND $P{date2}
+AND X.KD_PUSKESMAS = $P{parameter1}
+GROUP BY  X.KD_PELAYANAN
+ORDER BY X.KD_PASIEN]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="KABKOTA" class="java.lang.String"/>
+	<field name="KECAMATAN" class="java.lang.String"/>
+	<field name="PUSTU_YG_ADA" class="java.lang.String"/>
+	<field name="YANG_LAPOR" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="NAMA_MENGETAHUI" class="java.lang.String"/>
+	<field name="NIP_MENGETAHUI" class="java.lang.String"/>
+	<field name="LOKASI" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="NAMA_PELAPOR" class="java.lang.String"/>
+	<field name="NIP_PELAPOR" class="java.lang.String"/>
+	<field name="KD_PELAYANAN" class="java.lang.String"/>
+	<field name="KD_PASIEN" class="java.lang.String"/>
+	<field name="NAMA_PASIEN" class="java.lang.String"/>
+	<field name="JNS_KELAMIN" class="java.lang.String"/>
+	<field name="TGL_LAHIR" class="java.sql.Date"/>
+	<field name="NAMA_AYAH" class="java.lang.String"/>
+	<field name="KD_KELURAHAN" class="java.lang.String"/>
+	<field name="TT0" class="java.lang.String"/>
+	<field name="TT1" class="java.lang.String"/>
+	<field name="TT2" class="java.lang.String"/>
+	<field name="TT3" class="java.lang.String"/>
+	<field name="TT4" class="java.lang.String"/>
+	<field name="TT5" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="206" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="802" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Laporan Hasil Imunisasi Rutin Ibu Hamil]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="112" y="67" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="14" y="88" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="67" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="87" width="28" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="201" y="87" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="203" y="67" width="216" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="112" y="87" width="62" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="6" y="186" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="106" y="186" width="45" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kelamin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="186" width="52" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Tgl Lahir]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="186" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nama Ortu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="166" width="254" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Tanggal Pemberian Imunisasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="289" y="186" width="122" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Alamat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="186" width="52" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TT 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="463" y="186" width="49" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TT 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="512" y="186" width="52" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TT 3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="613" y="186" width="52" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TT 5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="564" y="186" width="49" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TT 4]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="165" width="665" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="205" width="664" height="1"/>
+			</line>
+			<line>
+				<reportElement x="664" y="166" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="411" y="166" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="288" y="165" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="203" y="165" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="151" y="165" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="106" y="165" width="1" height="39"/>
+			</line>
+			<line>
+				<reportElement x="0" y="165" width="1" height="41"/>
+			</line>
+			<line>
+				<reportElement x="613" y="186" width="1" height="19"/>
+			</line>
+			<staticText>
+				<reportElement x="107" y="167" width="45" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Jenis]]></text>
+			</staticText>
+			<line>
+				<reportElement x="412" y="185" width="253" height="1"/>
+			</line>
+			<line>
+				<reportElement x="564" y="186" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="512" y="187" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="463" y="186" width="1" height="19"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="27" width="664" height="1"/>
+			</line>
+			<line>
+				<reportElement x="664" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="564" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="512" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="463" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="613" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="411" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="288" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="203" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="151" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="106" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="-112" y="-212" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="27"/>
+			</line>
+			<textField>
+				<reportElement x="3" y="1" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PASIEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="109" y="1" width="43" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JNS_KELAMIN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="155" y="1" width="50" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TGL_LAHIR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="1" width="83" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TGL_LAHIR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="292" y="1" width="109" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_KELURAHAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="1" width="51" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TT1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="467" y="2" width="46" height="19"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TT2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="515" y="1" width="50" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TT3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="567" y="0" width="47" height="21"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TT4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="614" y="0" width="51" height="21"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TT5}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="244" splitType="Stretch">
+			<staticText>
+				<reportElement x="16" y="48" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskesmas]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="169" width="801" height="1"/>
+			</line>
+			<textField evaluationTime="Report">
+				<reportElement x="419" y="183" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="339" y="183" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="6" y="183" width="176" height="20"/>
+				<textElement/>
+				<text><![CDATA[Laporan Hasil Imunisasi Rutin Bumil]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="16" y="123" width="176" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="702" y="183" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

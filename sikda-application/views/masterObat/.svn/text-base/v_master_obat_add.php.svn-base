@@ -1,0 +1,102 @@
+<script>
+$(document).ready(function(){
+		$('#obatadd').ajaxForm({
+			beforeSend: function() {
+				achtungShowLoader();	
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			},
+			complete: function(xhr) {
+				achtungHideLoader();
+				if(xhr.responseText!=='OK'){
+					$.achtung({message: xhr.responseText, timeout:5});
+				}else{
+					$.achtung({message: 'Proses Tambah Data Berhasil', timeout:5});
+					$("#t61","#tabs").empty();
+					$("#t61","#tabs").load('c_master_obat'+'?_=' + (new Date()).getTime());
+				}
+			}
+		});
+})
+$('#tglobat').datepicker({dateFormat: "dd-mm-yy",changeYear: true});
+</script>
+<script>
+	$('#backlistobat').click(function(){
+		$("#t61","#tabs").empty();
+		$("#t61","#tabs").load('c_master_obat'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div class="mycontent">
+<div class="formtitle">Tambah Obat</div>
+<div class="backbutton"><span class="kembali" id="backlistobat">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" id="obatadd" method="post" action="<?=site_url('c_master_obat/addprocess')?>" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>KODE OBAT</label>
+		<input type="text" name="kode_obat_val" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>NAMA OBAT</label>
+		<input type="text" name="nama_obat" id="text2" value=""  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>KD GOL OBAT</label>
+		<input type="text" name="kd_gol_obat"  value=""  />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>KD SAT KECIL</label>
+		<input type="text" name="kd_sat_kecil"  value=""  />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>KD SAT BESAR</label>
+		<input type="text" name="kd_sat_besar"  value=""  />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>KD TERAPI OBAT</label>
+		<input type="text" name="kd_ter_obat"  value=""  />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>GENERIK</label>
+		<input type="text" name="generik"  value=""  />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>FRACTION</label>
+		<input type="text" name="fraction"  value=""  />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>SINGKATAN</label>
+		<input type="text" name="singkatan"  value=""  />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>IS DEFAULT</label>
+		<input type="text" name="default"  value=""  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<input type="submit" name="bt1" value="Proses Data"/>
+		</span>
+	</fieldset>	
+</form>
+</div >

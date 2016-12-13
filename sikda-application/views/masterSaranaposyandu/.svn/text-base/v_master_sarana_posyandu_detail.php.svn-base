@@ -1,0 +1,40 @@
+<script>
+	$('#backlistsaranaposyandu').click(function(){
+		$("#t14","#tabs").empty();
+		$("#t14","#tabs").load('c_master_sarana_posyandu'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div class="mycontent">
+<div class="formtitle">Detail Sarana Posyandu</div>
+<div class="backbutton"><span class="kembali" id="backlistsaranaposyandu">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" method="post" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>Kode Sarana Posyandu</label>
+		<input type="text" readonly name="yangditemui" id="text1" value="<?=$data->nkode_sarana_posyandu?>" />
+		<input type="hidden" name="id" id="textid" value="<?=$data->nid_sarana_posyandu?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Nama Sarana Posyandu</label>
+		<input type="text" readonly name="namasaranaposyandu" id="text2" value="<?=$data->nnama_sarana_posyandu?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Keterangan</label>
+		<textarea name="keterangan" rows="3" cols="45"><?=$data->nketerangan?></textarea>
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Tanggal Sarana Posyandu</label>
+		<input type="text" readonly name="tglsaranaposyandu" id="tglsaranaposyandu" value="<?=$data->ntgl_sarana_posyandu?>" style="width:89px" />
+		</span>
+	</fieldset>
+</form>
+</div >

@@ -1,0 +1,25 @@
+<script type="text/javascript" src="<?=base_url()?>assets/customjs/master_satuan_besar.js"></script>
+
+<div class="mycontent">
+<div id="dialogmastersatuanbesar" style="color:red;font-size:.75em;display:none" title="Confirmation Required">
+  Hapus Data?
+</div>
+<div class="formtitle">Master Satuan Besar</div>
+	<form id="formmastersatuanbesar">
+		<div class="gridtitle">Daftar Satuan Besar<span class="tambahdata" id="v_master_satuan_besar_add">Input Satuan Besar</span></div>
+		
+		<fieldset style="margin:0 13px 0 13px ">
+						<span>
+						<label>Satuan Besar</label>
+						<input type="text" name="satuan" class="satuan" id="satuanmastersatuan"/>
+						<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carimastersatuanbesar"/>
+						<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetmastersatuanbesar"/>
+						</span>
+					</fieldset>
+		
+		<div class="paddinggrid">
+		<table id="listmastersatuanbesar"></table>
+		<div id="pagermastersatuanbesar"></div>
+		</div >
+	</form>
+</div>

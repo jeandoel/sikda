@@ -1,0 +1,40 @@
+/* CSS Document */
+
+#divLap  .content{
+	margin:0 auto;
+	margin:20px;
+	margin-bottom:0px;
+}
+#divLap table {border-collapse: collapse; }
+#divLap td    {padding: 5px;}
+#divLap table tr td, #divLap table tr th{
+	border:1px solid #000;
+}
+
+#divLap h1{
+	font-size:15px;
+}
+#divLap h2{
+	font-size:14px;
+}
+#divLap h3{
+	font-size:13px;
+}
+
+#divLap h1, #divLap h3{
+	text-align:center;
+}
+#divLap table { font-family: arial; font-size: 13px; padding: 2px 3px}
+#divLap table.responsive{ background-color:#1a99e6; border-collapse: collapse; border-color: #fff}
+
+ #divLap tr th{
+  background:#009933;  color: #fff;
+  border:1px solid #fff;
+ }
+ 
+ #divLap tr:nth-child(odd){
+  background:#ccc;
+ }
+ #divLap tr:nth-child(even){
+  background:#fff;
+ }

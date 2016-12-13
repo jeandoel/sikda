@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_restribusi2_RJ" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1,
+$P{date2} as dt2,
+ V.KD_PUSKESMAS,
+ V.NAMA_PUSKESMAS,
+(IF(UCASE(V.UNIT_PELAYANAN) = 'RJ', 'RAWAT JALAN','RAWAT INAP')) AS `JENIS_RAWAT`,
+SUM((select JUMLAH_BAYAR from pel_kasir_detail_bayar WHERE KD_PEL_KASIR= V.KD_PEL_KASIR)) AS JUMLAH_BAYAR,
+(select PRODUK from mst_produk where KD_PRODUK= V.KD_PRODUK) AS NM_PRODUK,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE S.KEY_DATA = 'KEPALA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+(SELECT UNIT from mst_unit WHERE KD_UNIT=V.KD_UNIT) AS NAMA_POLI
+FROM vw_rpt_restribusi AS V
+WHERE V.KD_PUSKESMAS = $P{parameter1}
+AND V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}
+GROUP BY JENIS_RAWAT, NAMA_POLI, NM_PRODUK ; ]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.String"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="JENIS_RAWAT" class="java.lang.String"/>
+	<field name="JUMLAH_BAYAR" class="java.lang.Double"/>
+	<field name="NM_PRODUK" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="NAMA_POLI" class="java.lang.String"/>
+	<group name="poli">
+		<groupExpression><![CDATA[$F{NAMA_POLI}]]></groupExpression>
+		<groupHeader>
+			<band height="21"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<group name="jenis">
+		<groupExpression><![CDATA[$F{JENIS_RAWAT}]]></groupExpression>
+		<groupHeader>
+			<band height="29">
+				<textField>
+					<reportElement x="0" y="0" width="112" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{JENIS_RAWAT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="126" y="0" width="199" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NM_PRODUK}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="112" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NAMA_POLI}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

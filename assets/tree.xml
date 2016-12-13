@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rows>
+    <page>1</page>
+    <total>1</total>
+    <records>1</records>
+    <row><cell>1</cell><cell>Pengajuan Prodi Baru</cell><cell/><cell>0</cell><cell>1</cell><cell>10</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>2</cell><cell>Rekapitulasi Data Pengajuan Prodi Baru</cell><cell>prodibaru</cell><cell>1</cell><cell>2</cell><cell>3</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>6</cell><cell>Perguruan Tinggi Baru</cell><cell/><cell>0</cell><cell>11</cell><cell>18</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>7</cell><cell>Rekapitulasi Data PT Baru</cell><cell>ptbaru</cell><cell>1</cell><cell>12</cell><cell>13</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>10</cell><cell>Alih Bina / Bentuk PT</cell><cell/><cell>0</cell><cell>19</cell><cell>32</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>11</cell><cell>Rekapitulasi Data Alih Bina/Bentuk PT</cell><cell>alihbina</cell><cell>1</cell><cell>20</cell><cell>21</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>17</cell><cell>Status Kelembagaan</cell><cell/><cell>0</cell><cell>33</cell><cell>44</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>18</cell><cell>Rekapitulasi Data Status Kelembagaan</cell><cell>cmultiex.html</cell><cell>1</cell><cell>34</cell><cell>35</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>23</cell><cell>Hibab dan Bansos</cell><cell/><cell>0</cell><cell>45</cell><cell>58</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>24</cell><cell>Rekapitulasi Data Hibah dan Bansos</cell><cell>hibahbansos</cell><cell>1</cell><cell>46</cell><cell>47</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>29</cell><cell>Kerjasama Antar Lembaga</cell><cell/><cell>0</cell><cell>59</cell><cell>66</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>30</cell><cell>Rekapitulasi Data KAL</cell><cell>kal</cell><cell>1</cell><cell>60</cell><cell>61</cell><cell>true</cell><cell>true</cell></row>
+    <row><cell>31</cell><cell>Pendataan Permohonan Kerjasama</cell><cell>kal/listpermohonan</cell><cell>1</cell><cell>62</cell><cell>63</cell><cell>true</cell><cell>true</cell></row>
+    <row><cell>32</cell><cell>Penyiapan Kerjasama PT</cell><cell>kal/listlembarkerja</cell><cell>1</cell><cell>64</cell><cell>65</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>35</cell><cell>Perizinan Mahasiswa Asing</cell><cell/><cell>0</cell><cell>70</cell><cell>81</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>36</cell><cell>Rekapitulasi Data Perizinan Mahasiswa Asing</cell><cell>izinmhsasing</cell><cell>1</cell><cell>71</cell><cell>72</cell><cell>true</cell><cell>true</cell></row>
+    <row><cell>37</cell><cell>Upload Data Mahasiswa Asing</cell><cell>izinmhsasing/formuploadexcel</cell><cell>1</cell><cell>73</cell><cell>73</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>41</cell><cell>Perizinan Pengajar Asing</cell><cell/><cell>0</cell><cell>81</cell><cell>90</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>42</cell><cell>Rekapitulasi Data Perizinan Pengajar Asing</cell><cell>toolbar.html</cell><cell>1</cell><cell>82</cell><cell>83</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>46</cell><cell>Persuratan</cell><cell/><cell>0</cell><cell>91</cell><cell>106</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>47</cell><cell>Rekapitulasi Data Persuratan</cell><cell>persuratan</cell><cell>1</cell><cell>92</cell><cell>93</cell><cell>true</cell><cell>true</cell></row>
+	
+    <row><cell>54</cell><cell>Settings</cell><cell/><cell>0</cell><cell>107</cell><cell>126</cell><cell>false</cell><cell>false</cell></row>
+    <row><cell>55</cell><cell>Data User</cell><cell>gridwidth.html</cell><cell>1</cell><cell>108</cell><cell>109</cell><cell>true</cell><cell>true</cell></row>
+    <row><cell>56</cell><cell>1</cell><cell>treegrid.html</cell><cell>1</cell><cell>110</cell><cell>111</cell><cell>true</cell><cell>true</cell></row>
+    <row><cell>57</cell><cell>2</cell><cell>celledit.html</cell><cell>1</cell><cell>112</cell><cell>113</cell><cell>true</cell><cell>true</cell></row>
+
+</rows>

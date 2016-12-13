@@ -1,0 +1,27 @@
+
+<script src="../lib/jquery-1.9.0.js"></script>
+<script src="../dist/jquery.validate.js"></script>
+
+<script>
+$.validator.setDefaults({
+	submitHandler: function() { alert("submitted!"); }
+});
+
+$('document').ready(function() {
+	// validate the comment form when it is submitted
+	$("#form-login").validate();
+})
+</script>
+<form id="form-login" action="login/mlogin" method="post">
+    <fieldset>
+		<p>
+		<label for="username">Username</label>
+        <input type="text" name="username" id="name" class="text ui-widget-content ui-corner-all" required />
+		</p>
+		<p>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all"  required />		
+		</p>
+    </fieldset>
+	<input type="submit">
+    </form>

@@ -1,0 +1,90 @@
+<script>
+jQuery().ready(function (){ 
+	jQuery("#listmastergolobatpopup").jqGrid({ 
+		url:'c_master_gol_obat/mastergolobatxml', 
+		emptyrecords: 'Nothing to display',
+		datatype: "xml", 
+		colNames:['Kode','Kode Gol. Obat','Golongan Obat','Action'],
+		rownumbers:true,
+		width: 1021,
+		height: 'auto',
+		mtype: 'POST',
+		altRows     : true,		
+		colModel:[ 
+				{name:'id',index:'id', width:5,hidden:false,formatter:formatterAction}, 
+				{name:'kodgolobat',index:'kodgolobat', width:100}, 
+				{name:'golobat',index:'golobat', width:100}, 
+				{name:'myid',index:'myid', width:91,align:'center',hidden:true}
+			],
+			rowNum:5, 
+			rowList:[5,10,20,30], 
+			pager: jQuery('#pagermastergolobatpopup'), 
+			viewrecords: true, 
+			sortorder: "desc",
+			beforeRequest:function(){
+				carinama=$('#carinamamastergolobatpopup').val()?$('#carinamamastergolobatpopup').val():'';
+				$('#listmastergolobatpopup').setGridParam({postData:{'dari':'','sampai':'','carinama':carinama}})
+			}
+	}).navGrid('#pagermastergolobatpopup',{edit:false,add:false,del:false,search:false});
+	
+	function formatterAction(cellvalue, options, rowObject) {
+		var content = '';
+		return '<input type="checkbox" class="chk" name="chk[]" id="chkgolobat" />';
+		return content;
+	}	
+	
+	$("#chkgolobat.chk").live('click', function(){		
+		$("#listmastergolobatpopup").find('input[type=checkbox]').each(function() {
+			$(this).change( function(){
+				var colid = $(this).parents('tr:last').attr('id');
+				if( $(this).is(':checked')) {
+					$("#listmastergolobatpopup").jqGrid('setSelection', colid );
+					$(this).prop('checked',true);
+					var myCellDataId = jQuery('#listmastergolobatpopup').jqGrid('getCell', colid, 'myid');
+					var myCellDataColumn1 = jQuery('#listmastergolobatpopup').jqGrid('getCell', colid, 'namaKota');
+					$('#<?=$id_caller?> #master_gol_obat_id_hidden').val(myCellDataId);
+					$('#<?=$id_caller?> #master_gol_obat_id').val(myCellDataColumn1);
+					$("#dialogcari_master_gol_obat_id").dialog("close");
+				}
+			});	
+		});
+	});
+	
+	$('form').resize(function(e) {
+		if($("#listmastergolobatpopup").getGridParam("records")>0){
+		jQuery('#listmastergolobatpopup').setGridWidth(($(this).width()));
+		}
+	});
+	
+	$("#carimastergolobatpopup").live('click', function(event){
+		event.preventDefault();
+		$('#listmastergolobatpopup').trigger("reloadGrid");
+	});
+	jQuery.fn.reset = function (){
+	  $(this).each (function() { this.reset(); });
+	}
+	$("#resetmastergolobatpopup").live('click', function(event){
+		event.preventDefault();
+		$('#formmastergolobatpopup').reset();
+		$('#listmastergolobatpopup').trigger("reloadGrid");
+	});
+})
+</script>
+
+<div class="mycontent">
+	<form id="formmastergolobatpopup">
+	<fieldset style="margin:0 13px 0 13px ">
+		<span>
+		<label>Cari Golongan Obat</label>
+		</span>
+		<span>
+		<input type="text" name="carinama" class="nama" size="3" id="carinamamastergolobatpopup" autocomplete="off">
+		<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carimastergolobatpopup"/>
+		<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetmastergolobatpopup"/>
+		</span>
+	</fieldset>
+		<table id="listmastergolobatpopup"></table>
+		<div id="pagermastergolobatpopup"></div>
+		</div >
+	</form>
+</div>

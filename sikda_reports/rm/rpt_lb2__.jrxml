@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_lb2" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="76b7b4bb-0826-40a1-a8fd-7d7e5f3d1252">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="491"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="parameter1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date2" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date1" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DATE_FORMAT($P{date1},'%d-%m-%Y') as dt1, DATE_FORMAT($P{date2},'%d-%m-%Y') as dt2, $P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'NAMA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'NAMA_PIMPINAN' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+I.KD_OBAT, I.NAMA_OBAT,I.KD_SAT_KECIL,
+IFNULL(COL_STOKAWAL,'') AS COL_STOKAWAL,
+IFNULL(COL_PENERIMAAN_APBD,'') AS COL_PENERIMAAN_APBD,
+IFNULL(COL_PERSEDIAAN_APBD,'') AS COL_PERSEDIAAN_APBD,
+IFNULL(COL_PEMAKAIAN_APBD,'') AS COL_PEMAKAIAN_APBD,
+IFNULL(COL_STOKAKHIR_APBD,'') AS COL_STOKAKHIR_APBD, 
+IFNULL((SELECT R.HARGA_BELI FROM apt_mst_harga_obat R WHERE R.KD_OBAT=KD_OBAT LIMIT 1),0) 
+AS HARGA_BELI,IFNULL((SELECT D.HARGA_JUAL FROM apt_mst_harga_obat D WHERE D.KD_OBAT=P.KD_OBAT LIMIT 1),0) AS HARGA_JUAL
+FROM (
+
+SELECT
+
+A.KD_OBAT,  A.KD_MILIK_OBAT,
+SUM(IF(HEADER_STOKAWAL='STOKAWAL', A.QTY+IFNULL((SELECT SUM(JUMLAH_STOK_OBAT) FROM apt_stok_obat WHERE KD_OBAT=A.KD_OBAT AND KD_MILIK_OBAT='PKM' AND KD_PKM=$P{parameter1}),0),0)) AS `COL_STOKAWAL`,
+SUM(IF(HEADER='PENERIMAAN', IFNULL((SELECT SUM(b.`JUMLAH_KELUAR`) AS jumlah FROM apt_obat_keluar z JOIN apt_obat_keluar_detail b ON z.KD_KELUAR_OBAT=b.`KD_KELUAR_OBAT` WHERE b.KD_OBAT=A.KD_OBAT AND z.`UNIT_APT_FROM`='PUSKESMAS' AND z.`UNIT_APT_TO`='APT' AND (z.`TGL_OBAT_KELUAR` BETWEEN $P{date1} AND $P{date2}) GROUP BY b.KD_OBAT),0),0)) AS `COL_PENERIMAAN_APBD`,
+SUM(IF(HEADER_PERSEDIAAN='PERSEDIAAN',  A.QTY+IFNULL((SELECT JUMLAH_STOK_OBAT FROM apt_stok_obat WHERE KD_OBAT=A.KD_OBAT AND KD_MILIK_OBAT='PKM' AND KD_UNIT_APT='APT'),0),0)) AS `COL_PERSEDIAAN_APBD`,
+SUM(IF(HEADER_PEMAKAIAN='PEMAKAIAN' , A.QTY,0)) AS `COL_PEMAKAIAN_APBD`,
+SUM(IF(HEADER_STOKAKHIR='STOKAKHIR' , (SELECT SUM(JUMLAH_STOK_OBAT) FROM apt_stok_obat WHERE KD_OBAT=A.KD_OBAT AND KD_MILIK_OBAT='PKM' AND KD_PKM=$P{parameter1}),0)) AS `COL_STOKAKHIR_APBD`
+FROM (
+SELECT V.KD_PUSKESMAS, V.KD_OBAT, V.NAMA_OBAT, V.KD_MILIK_OBAT
+,'STOKAWAL' AS `HEADER_STOKAWAL`
+,'PENERIMAAN' AS `HEADER`
+,'PERSEDIAAN' AS `HEADER_PERSEDIAAN`
+,'PEMAKAIAN' AS `HEADER_PEMAKAIAN`
+,'STOKAKHIR' AS `HEADER_STOKAKHIR`
+,SUM(QTY) AS `QTY` FROM vw_rpt_obat AS V WHERE (TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) AND V.KD_PUSKESMAS = $P{parameter1}
+GROUP BY V.KD_PUSKESMAS, V.KD_OBAT, V.NAMA_OBAT, V.KD_MILIK_OBAT
+) A  GROUP BY
+A.KD_OBAT,  A.KD_MILIK_OBAT
+) P LEFT JOIN apt_mst_obat I ON I.KD_OBAT=P.KD_OBAT
+ORDER BY I.NAMA_OBAT;]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KD_OBAT" class="java.lang.Integer"/>
+	<field name="NAMA_OBAT" class="java.lang.String"/>
+	<field name="KD_SAT_KECIL" class="java.lang.String"/>
+	<field name="COL_STOKAWAL" class="java.lang.String"/>
+	<field name="COL_PENERIMAAN_APBD" class="java.lang.String"/>
+	<field name="COL_PERSEDIAAN_APBD" class="java.lang.String"/>
+	<field name="COL_PEMAKAIAN_APBD" class="java.lang.String"/>
+	<field name="COL_STOKAKHIR_APBD" class="java.lang.String"/>
+	<field name="HARGA_BELI" class="java.lang.String"/>
+	<field name="HARGA_JUAL" class="java.lang.String"/>
+	<variable name="total" class="java.lang.Integer" calculation="Sum"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="153" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c07fee0e-bf32-41fc-9426-2e665c70b694" x="8" y="134" width="29" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ef4136b9-4a79-421b-9264-651298ee8509" x="102" y="18" width="598" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="26" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[LAPORAN BULANAN (LB2) - OBAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f629294d-efe4-4ba4-b6c0-cb839a55d6b8" x="6" y="81" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ef4b82f9-e09b-40c4-86bf-3587e5e9b6aa" x="7" y="102" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="a72a0275-4e1d-404b-b2a5-682e18bbbfe2" x="1" y="130" width="800" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="fc6b9253-23cf-4584-b557-6fd8668bb5c1" x="171" y="101" width="28" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6a6d19cb-3958-44a4-81f1-518ebf61d0fc" x="104" y="81" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="04ae25f0-81dd-43fa-9470-387fd89470a2" x="195" y="81" width="216" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="dfd7ae12-c085-4894-aa6b-636e27f5dfb7" x="104" y="101" width="62" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="0ea3f63f-fc70-4415-866e-94723b393d94" x="203" y="101" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="616b025f-2c08-4136-962e-c8be6d5d620e" x="41" y="133" width="234" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NAMA OBAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="016ec1cb-0084-4b1b-b3ab-16cdc78b2407" stretchType="RelativeToBandHeight" x="330" y="134" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STOK AWAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3ffec58c-ef9e-495f-92fe-66dfb7ad4f62" x="385" y="133" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENERIMAAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e53b98c4-b5cd-4ecb-bfe5-144165f30721" x="435" y="133" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERSEDIAAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5af7aea4-6027-4d63-bb9b-9451ac091195" x="485" y="133" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PEMAKAIAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5b9c5b03-1666-406e-8f96-adfe763891c8" x="535" y="133" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STOK AKHIR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5b9c5b03-1666-406e-8f96-sdvlknjoij32" x="585" y="133" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HARGA BELI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5b9c5b03-1666-406e-8f96-7yoij909juj9" x="635" y="133" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HARGA JUAL]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="197bfb9c-1d26-4740-aac1-fe0efe52a6ea" x="2" y="153" width="799" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="a7b5dcf5-be69-4860-8cf4-fbe71462fa9e" x="1" y="132" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement uuid="0bb9e5e2-95f6-4598-a20e-fa5c88f3e611" x="339" y="130" width="1" height="23"/>
+			</line>
+			<line>
+				<reportElement uuid="9125751c-220f-440a-a878-16feb6d8f009" x="800" y="131" width="1" height="38"/>
+			</line>
+			<line>
+				<reportElement uuid="37ac8bb4-8f8e-4dbb-bc18-1143056cc31f" x="38" y="131" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement uuid="0c78db83-95d3-45f4-b3ae-519d8e37758e" x="349" y="9" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement uuid="0c78db83-95d3-45f4-b3ae-ads876hdsu98" x="349" y="9" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement uuid="0c78db83-95d3-45f4-b3ae-kucjn98whni4" x="349" y="9" width="1" height="16"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="94c2aade-e105-4363-92c8-c03d18e0e4ff" x="339" y="1" width="85" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_STOKAWAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="f7a2befd-1c7e-45d0-b499-f5e92a296f3c" x="427" y="1" width="74" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PENERIMAAN_APBD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e5502417-2b44-4d70-a5ef-0c38bf11607c" x="8" y="1" width="29" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="2da2a060-e729-40d5-91a5-4e29aa5c2164" x="501" y="1" width="74" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PERSEDIAAN_APBD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="a870bfae-33aa-40f5-a5ac-cee8495197c4" x="651" y="2" width="149" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_STOKAKHIR_APBD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="6a2ead76-2943-431f-b537-4e9e7ff274f1" x="575" y="0" width="73" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PEMAKAIAN_APBD}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="4b38e73c-a4ac-460c-a276-564962b2662b" x="1" y="18" width="800" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="366cb104-605e-43ca-9774-910cdf9564bd" x="41" y="2" width="234" height="12"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_OBAT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="b9be97c7-6580-48fe-983b-f041900b67ef" x="1" y="-1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement uuid="691bb0cf-7934-4c12-9c79-88f5221194b8" x="339" y="-1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement uuid="34554952-7ea3-410e-872a-e06169f185c9" x="800" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement uuid="1459573e-6a95-4f72-926e-b4058b89ca41" x="38" y="0" width="1" height="16"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="96" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="8c361b6c-b1bc-4582-9441-82276007e4ce" x="0" y="76" width="225" height="20"/>
+				<textElement/>
+				<text><![CDATA[LB2]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="b2e12338-7143-4432-9d7c-6534cf35d3e3" x="683" y="76" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="08310267-3ef1-4b5a-a607-5efad75e4c60" x="302" y="76" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="b1941390-40b4-4da0-a3bd-789fdd1a8926" x="384" y="76" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a95d7031-81d7-4bab-88c0-f51809d0b21b" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskemas]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a3f8d378-7fae-4daf-af23-011acb8f559b" x="0" y="50" width="166" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

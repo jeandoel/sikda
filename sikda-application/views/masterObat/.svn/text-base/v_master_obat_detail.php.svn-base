@@ -1,0 +1,78 @@
+<script>
+	$('#backlistobat').click(function(){
+		$("#t61","#tabs").empty();
+		$("#t61","#tabs").load('c_master_obat'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div class="mycontent">
+<div class="formtitle">Detail Obat</div>
+<div class="backbutton"><span class="kembali" id="backlistobat">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" method="post" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>KODE OBAT</label>
+		<input type="text" readonly name="kode_obat" id="text1" value="<?=$data->KD_OBAT_VAL?>" />
+		<input type="hidden" name="id" id="textid" value="<?=$data->KD_OBAT?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>NAMA OBAT</label>
+		<input type="text" readonly name="nama_obat" id="text2" value="<?=$data->NAMA_OBAT?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>KD GOL OBAT</label>
+		<input type="text" readonly name="kd_gol_obat" id="text2" value="<?=$data->KD_GOL_OBAT?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>KD SAT KECIL</label>
+		<input type="text" readonly name="kd_sat_kecil" id="text2" value="<?=$data->KD_SAT_KECIL?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>KD SAT BESAR</label>
+		<input type="text" readonly name="kd_sat_besar" id="text2" value="<?=$data->KD_SAT_BESAR?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>KD TERAPI OBAT</label>
+		<input type="text" readonly name="kd_ter_obat" id="text2" value="<?=$data->KD_TERAPI_OBAT?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>GENERIK</label>
+		<input type="text" readonly name="generik" id="text2" value="<?=$data->GENERIK?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>FRACTION</label>
+		<input type="text" readonly name="fraction" id="text2" value="<?=$data->FRACTION?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>SINGKATAN</label>
+		<input type="text" readonly name="singkatan" id="" value="<?=$data->SINGKATAN?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>IS DEFAULT</label>
+		<input type="text" readonly name="default" id="text2" value="<?=$data->IS_DEFAULT?>"  />
+		</span>
+	</fieldset>
+	
+	
+</form>
+</div >

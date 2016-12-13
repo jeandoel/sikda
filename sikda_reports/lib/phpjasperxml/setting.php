@@ -1,0 +1,9 @@
+<?php
+$server="localhost";
+$db="sikda_generik";
+$user="root";
+$pass="123";
+$version="0.8";
+$pgport=5432;
+$pchartfolder="./class/pchart2";
+?>

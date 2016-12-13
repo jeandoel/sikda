@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_lb3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT DATE_FORMAT($P{date1},'%d-%m-%Y') as dt1, DATE_FORMAT($P{date2},'%d-%m-%Y') as dt2,
+$P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'NAMA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'NAMA_PIMPINAN' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+(SELECT P.PROVINSI FROM sys_setting S INNER JOIN mst_provinsi  P
+ON S.KEY_VALUE=P.KD_PROVINSI WHERE
+S.KEY_DATA = 'KD_PROV' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS PROVINSI,
+(SELECT P.KABUPATEN FROM sys_setting S INNER JOIN mst_kabupaten  P
+ON S.KEY_VALUE=P.KD_KABUPATEN WHERE
+S.KEY_DATA = 'KD_KABKOTA' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KABKOTA,
+(SELECT P.KECAMATAN FROM sys_setting S INNER JOIN mst_kecamatan  P
+ON S.KEY_VALUE=P.KD_KECAMATAN WHERE
+S.KEY_DATA = 'KD_KEC' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KECAMATAN,
+ '' AS 'PUSTU_YG_ADA',
+ '' AS 'YANG_LAPOR',
+ 'DARI PARAMETER PHP' AS 'TAHUN',
+ '' AS 'NAMA_MENGETAHUI',
+ '' AS 'NIP_MENGETAHUI',
+ '' AS 'LOKASI',
+ 'TANGGAL HARI INI' AS 'TANGGAL',
+ '' AS 'NAMA_PELAPOR',
+ '' AS 'NIP_PELAPOR', X.*
+FROM (
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'A' as 'KELOMPOK', 'Gizi' as Program, 'Upaya Penanggulangan Kekurangan Vitamin A' as kegiatan, '' as Jumlah6, 1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'A' as 'KELOMPOK','Gizi' as Program, 'Jumlah anak balita (1-5 th) dapat kapsul vit. A dosis tinggi (200.000 IU) bulan ini' as kegiatan, (SELECT
+COUNT(X.KD_PASIEN) as JML
+FROM (SELECT * FROM (
+select V.KD_PASIEN, V.KD_PELAYANAN, V.KD_PUSKESMAS, V.VARIABEL_ID AS 'CL_CHILDVITA', '' AS 'CL_CHILDEXAMAGE',  V.HASIL  AS 'VITA' , '' AS AGE from pel_hasil_kia AS V
+WHERE V.KD_PUSKESMAS = $P{parameter1}
+AND V.VARIABEL_ID = 'CL_CHILDVITA'
+AND V.HASIL = 'YA'
+UNION ALL
+select V.KD_PASIEN, V.KD_PELAYANAN, V.KD_PUSKESMAS,  ''AS 'CL_CHILDVITA' ,V.VARIABEL_ID AS 'CL_CHILDEXAMAGE', '' AS 'VITA' , V.HASIL AS AGE from pel_hasil_kia AS V
+WHERE V.KD_PUSKESMAS = $P{parameter1}
+AND V.VARIABEL_ID = 'CL_CHILDEXAMAGE'
+AND V.HASIL BETWEEN  '365' AND '1825'
+) M )X INNER JOIN pelayanan AS p
+WHERE p.KD_PELAYANAN = X.KD_PELAYANAN
+AND p.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2} ) as Jumlah6, 2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'A' as 'KELOMPOK','Gizi' as Program, 'Jumlah Ibu nifas (s/d 40 hr) dapat kapsul vit. A dosis tinggi (200.000 IU) bulan ini' as kegiatan, (SELECT
+COUNT(X.KD_PASIEN) as JML
+FROM (select V.KD_PASIEN, V.KD_PELAYANAN, V.KD_PUSKESMAS, V.VARIABEL_ID AS 'CL_CHILDVITA', '' AS 'CL_CHILDEXAMAGE',  V.HASIL  AS 'VITA' , '' AS AGE from pel_hasil_kia AS V
+WHERE V.KD_PUSKESMAS = $P{parameter1}
+AND V.VARIABEL_ID = 'CL_PNCCAREVITA'
+AND V.HASIL = 'YA'
+ )X INNER JOIN pelayanan AS p
+WHERE p.KD_PELAYANAN = X.KD_PELAYANAN
+AND p.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) as Jumlah6, 3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'A' as 'KELOMPOK','Gizi' as Program, 'Jumlah bayi (6-11 th) dapat kapsul vit. A dosis tinggi (200.000 IU) bulan ini' as kegiatan, (SELECT
+COUNT(X.KD_PASIEN) as JML
+FROM (SELECT * FROM (
+select V.KD_PASIEN, V.KD_PELAYANAN, V.KD_PUSKESMAS, V.VARIABEL_ID AS 'CL_CHILDVITA', '' AS 'CL_CHILDEXAMAGE',  V.HASIL  AS 'VITA' , '' AS AGE from pel_hasil_kia AS V
+WHERE V.KD_PUSKESMAS = $P{parameter1}
+AND V.VARIABEL_ID = 'CL_CHILDVITA'
+AND V.HASIL = 'YA'
+UNION ALL
+select V.KD_PASIEN, V.KD_PELAYANAN, V.KD_PUSKESMAS,  ''AS 'CL_CHILDVITA' ,V.VARIABEL_ID AS 'CL_CHILDEXAMAGE', '' AS 'VITA' , V.HASIL AS AGE from pel_hasil_kia AS V
+WHERE V.KD_PUSKESMAS = $P{parameter1}
+AND V.VARIABEL_ID = 'CL_CHILDEXAMAGE'
+AND V.HASIL BETWEEN  '2190' AND '4015'
+) M )X INNER JOIN pelayanan AS p
+WHERE p.KD_PELAYANAN = X.KD_PELAYANAN
+AND p.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2} ) as Jumlah6, 4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Ibu hamil dapat tablet tambah darah (Fe) 30 tablet (Fe1) bulan ini' as kegiatan, ''as Jumlah6, 1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Ibu hamil dapat tablet tambah darah (Fe) 90 tablet (Fe2) bulan ini' as kegiatan, ''as Jumlah6, 2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Balita diperiksa status anemia bulan ini' as kegiatan, ''as Jumlah6, 3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Balita yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, ''as Jumlah6, 4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah WUS (15 - 45 th) diperiksa status anemia bulan ini' as kegiatan, ''as Jumlah6, 5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah WUS (15 - 45 th) yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, ''as Jumlah6, 6 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Remaja Putri (14 - 18 th) diperiksa status anemia bulan ini' as kegiatan, ''as Jumlah6, 7 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Remaja Putri (14 - 18 th) yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, ''as Jumlah6, 8 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Tenaga Kerja Wanita (nakerwan) diperiksa status anemia bulan ini' as kegiatan, ''as Jumlah6, 9 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Tenaga Kerja Wanita (nakerwan) yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, ''as Jumlah6, 10 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Ibu hamil diperiksa status anemia bulan ini' as kegiatan, ''as Jumlah6, 11 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe)' as Program, 'Jumlah Ibu hamil yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, ''as Jumlah6, 12 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',  'Upaya Pemantauan Pertumbuhan Balita' as Program, 'Jumlah Balita yang ada bulan ini' as kegiatan, ''as Jumlah6, 1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',  'Upaya Pemantauan Pertumbuhan Balita' as Program,  'Jumlah Balita yang mempunyai KMS bulan ini' as kegiatan, ''as Jumlah6, 2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',   'Upaya Pemantauan Pertumbuhan Balita' as Program, 'Jumlah Balita yang Naik berat badannya bulan ini' as kegiatan, ''as Jumlah6, 3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',  'Upaya Pemantauan Pertumbuhan Balita' as Program,  'Jumlah Balita yang Tidak naik/tetap berat badannya bulan ini' as kegiatan, ''as Jumlah6, 4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',   'Upaya Pemantauan Pertumbuhan Balita' as Program, 'Jumlah Balita yang ditimbang bulan ini tetapi tidak ditimbang bulan lalu' as kegiatan, ''as Jumlah6, 5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',  'Upaya Pemantauan Pertumbuhan Balita' as Program,  'Jumlah Balita yang Baru ditimbang bulan ini' as kegiatan, ''as Jumlah6, 6 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',   'Upaya Pemantauan Pertumbuhan Balita' as Program, 'Jumlah Balita yang dapat ditimbang bulan ini' as kegiatan, ''as Jumlah6, 7 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',   'Upaya Pemantauan Pertumbuhan Balita' as Program, 'Jumlah Balita yang tidak dapat ditimbang bulan ini' as kegiatan, ''as Jumlah6, 8 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',   'Upaya Pemantauan Pertumbuhan Balita' as Program, 'jumlah Balita dengan Berat badan di Bawah Garis Merah (BGM) bulan ini' as kegiatan, ''as Jumlah6, 9 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'C' as 'KELOMPOK',   'Upaya Pemantauan Pertumbuhan Balita' as Program,  'Jumlah Balita gizi buruk bulan ini' as kegiatan, ''as Jumlah6, 10 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'D' as 'KELOMPOK',   'Upaya Penanggulangan Gangguan Akibat Kekurangan Yodium (GAKY)' as Program,  'Jumlah penderita GAKY laki-laki bulan ini ' as kegiatan, ''as Jumlah6, 1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'D' as 'KELOMPOK',   'Upaya Penanggulangan Gangguan Akibat Kekurangan Yodium (GAKY)' as Program,  'Jumlah penderita GAKY perempuan bulan ini ' as kegiatan, ''as Jumlah6, 2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'D' as 'KELOMPOK',   'Upaya Penanggulangan Gangguan Akibat Kekurangan Yodium (GAKY)' as Program,  'Jumlah ibu hamil mendapat kapsul yodium ' as kegiatan, ''as Jumlah6, 3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'D' as 'KELOMPOK',   'Upaya Penanggulangan Gangguan Akibat Kekurangan Yodium (GAKY)' as Program,  'Jumlah penduduk lainnya mendapat kapsul yodium ' as kegiatan, ''as Jumlah6, 4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'E' as 'KELOMPOK',   'Upaya Penanggulangan Kekurangan Energi Kronis (KEK)' as Program,  'Jumlah Ibu hamil baru, diukur LILA (Lingkar Lengan Atas) bulan ini ' as kegiatan, ''as Jumlah6, 1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'E' as 'KELOMPOK',   'Upaya Penanggulangan Kekurangan Energi Kronis (KEK)' as Program,  'Jumlah Ibu hamil baru, dengan LILA < 23,5 cm bulan ini ' as kegiatan, ''as Jumlah6, 2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'E' as 'KELOMPOK',   'Upaya Penanggulangan Kekurangan Energi Kronis (KEK)' as Program,  'Jumlah WUS baru, yang diukur LILA (Lingkar Lengan Atas) bulan ini ' as kegiatan, ''as Jumlah6, 3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'E' as 'KELOMPOK',   'Upaya Penanggulangan Kekurangan Energi Kronis (KEK)' as Program,  'Jumlah WUS baru, dengan LILA < 23,5 cm bulan ini ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Jumlah kunjungan K1 Bumil ' as kegiatan, (SELECT COUNT(KD_KUNJUNGAN_BUMIL) AS jumlah FROM kunjungan_bumil WHERE kunjungan_ke='K1' AND (TANGGAL_KUNJUNGAN BETWEEN $P{date1} AND $P{date2}))as Jumlah6,  1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Jumlah kunjungan Bumil lama ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'K2' as kegiatan, (SELECT COUNT(KD_KUNJUNGAN_BUMIL) AS jumlah FROM kunjungan_bumil WHERE kunjungan_ke='K2' AND (TANGGAL_KUNJUNGAN BETWEEN $P{date1} AND $P{date2}))as Jumlah6,  3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'K3' as kegiatan, (SELECT COUNT(KD_KUNJUNGAN_BUMIL) AS jumlah FROM kunjungan_bumil WHERE kunjungan_ke='K3' AND (TANGGAL_KUNJUNGAN BETWEEN $P{date1} AND $P{date2}))as Jumlah6,  4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'K4' as kegiatan, (SELECT COUNT(KD_KUNJUNGAN_BUMIL) AS jumlah FROM kunjungan_bumil WHERE kunjungan_ke='K4' AND (TANGGAL_KUNJUNGAN BETWEEN $P{date1} AND $P{date2}))as Jumlah6,  5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Kunjungan Bumil dengan faktor risiko : ' as kegiatan, ''as Jumlah6,  6 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'a. < 20 th ' as kegiatan, ''as Jumlah6,  7 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'b. > 35 th  ' as kegiatan, ''as Jumlah6,  8 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'c. Spacing < 2 th  ' as kegiatan, ''as Jumlah6,  9 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'd. Paritas > 5 th ' as kegiatan, ''as Jumlah6,  10 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'e. HB 11 gram %' as kegiatan, ''as Jumlah6,  11 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'f. BB Kg Triwulan III < 45 Kg ' as kegiatan, ''as Jumlah6,  12 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'g. TB < 145 cm' as kegiatan, ''as Jumlah6,  13 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Imunisasi TT Bumil (TT1, TT2) : ' as kegiatan, ''as Jumlah6,  14 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'a. TT1 ' as kegiatan, ''as Jumlah6,  15 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'b. TT2  ' as kegiatan, ''as Jumlah6,  16 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Pemberian tablet Fe Bumil : ' as kegiatan, ''as Jumlah6,  17 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'a. Fe1 ' as kegiatan, ''as Jumlah6,  18 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'b. Fe2  ' as kegiatan, ''as Jumlah6,  19 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'c. Fe3' as kegiatan, ''as Jumlah6,  20 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Jumlah kesakitan dan kematian Bumil yang ditangani : ' as kegiatan, ''as Jumlah6,  21 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'a. Pendarahan  ' as kegiatan, ''as Jumlah6,  22 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'b. Infeksi jalan lahir  ' as kegiatan, ''as Jumlah6,  23 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'c. Preeklamasi/Eklamsi  ' as kegiatan, ''as Jumlah6,  24 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'd. Sebab lain  ' as kegiatan, ''as Jumlah6,  25 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Deteksi risti bumil oleh nakes ' as kegiatan, ''as Jumlah6,  26 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'F' as 'KELOMPOK',   'Pelayanan Ibu Hamil' as Program,  'Deteksi risti bumil oleh masyarakat ' as kegiatan, ''as Jumlah6,  27 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'Persalinan ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'a. < 20 tahun ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'b.  20 - 24 tahun ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'c. 25 - 29 tahun ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'd. 30 - 34 tahun ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'e. > 35 tahun ' as kegiatan, ''as Jumlah6,  6 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'Jumlah persalinan ditolong oleh Nakes  ' as kegiatan, ''as Jumlah6,  7 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Lahir hidup ' as kegiatan, ''as Jumlah6,  8 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Lahir mati ' as kegiatan, ''as Jumlah6,  9 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- BBLR (BB < 2500 gram) ' as kegiatan, ''as Jumlah6,  10 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'Jumlah persalinan dukun didampingi oleh Nakes : ' as kegiatan, ''as Jumlah6,  11 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Lahir hidup ' as kegiatan, ''as Jumlah6,  12 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Lahir mati ' as kegiatan, ''as Jumlah6,  13 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- BBLR (BB < 2500 gram) ' as kegiatan, ''as Jumlah6,  14 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'Jumlah persalinan ditolong oleh dukun terlatih/tidak telatih : ' as kegiatan, ''as Jumlah6,  15 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Lahir hidup ' as kegiatan, ''as Jumlah6,  16 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Lahir mati ' as kegiatan, ''as Jumlah6,  17 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- BBLR (BB < 2500 gram) ' as kegiatan, ''as Jumlah6,  18 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'Kunjungan Neonatus  ' as kegiatan, ''as Jumlah6,  19 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- 0 - 7 hari ' as kegiatan, ''as Jumlah6,  20 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- 7 - 28 hari ' as kegiatan, ''as Jumlah6,  21 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'Jumlah kesakitan dan kematian ibu bersalin ditangani ' as kegiatan, ''as Jumlah6,  22 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Pendarahan ' as kegiatan, ''as Jumlah6,  23 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Infeksi jalan lahir ' as kegiatan, ''as Jumlah6,  24 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Preeklamasi/Eklamsi ' as kegiatan, ''as Jumlah6,  25 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Sebab lain ' as kegiatan, ''as Jumlah6,  26 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  'Jumlah kesakitan dan kematian ibu nifas ditangani ' as kegiatan, ''as Jumlah6,  27 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Pendarahan ' as kegiatan, ''as Jumlah6,  28 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Infeksi jalan lahir ' as kegiatan, ''as Jumlah6,  29 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Preeklamasi/Eklamsi ' as kegiatan, ''as Jumlah6,  30 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'G' as 'KELOMPOK',   'Pelayanan Persalinan' as Program,  '- Sebab lain ' as kegiatan, ''as Jumlah6,  31 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'Kunjungan baru ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'Kunjungan lama ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'Akseptor baru Buteki ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'Akseptor aktif Buteki ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'Akseptor aktif seluruh (CU) ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'Buteki dapat Fe ' as kegiatan, ''as Jumlah6,  6 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'Buteki dapat Vitamin A dosis tinggi ' as kegiatan, ''as Jumlah6,  7 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'H' as 'KELOMPOK',   'Pelayanan Ibu Menyusui ' as Program,  'ASI Eksklusif 0 - 6 bulan ' as kegiatan, ''as Jumlah6,  8 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  'Kunjungan baru diperiksa ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  'Kunjungan baru dIrujuk' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  'Kunjungan lama diperiksa' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  'Kunjungan lama dirujuk' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  'Jumlah kesakitan dan kematian Perinatal (0 - 7 hari) ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- BBLR ' as kegiatan, ''as Jumlah6,  6 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Tetanus Neonatorium ' as kegiatan, ''as Jumlah6,  7 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- BBLR dirujuk ke RSU ' as kegiatan, ''as Jumlah6,  8 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Tetanus Neonatorium dirujuk ke RSU ' as kegiatan, ''as Jumlah6,  9 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Oleh sebab lain  ' as kegiatan, ''as Jumlah6,  10 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  'Jumlah kesakitan dan kematian Perinatal (8 - 28 hari) ' as kegiatan, ''as Jumlah6,  11 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- BBLR ' as kegiatan, ''as Jumlah6,  12 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Tetanus Neonatorium ' as kegiatan, ''as Jumlah6,  13 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- BBLR dirujuk ke RSU ' as kegiatan, ''as Jumlah6,  14 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Tetanus Neonatorium dirujuk ke RSU' as kegiatan, ''as Jumlah6,  15 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Oleh sebab lain ' as kegiatan, ''as Jumlah6,  16 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  'Jumlah kesakitan dan kematian Perinatal (28 hari - 1 tahun) ' as kegiatan, ''as Jumlah6,  17 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- BBLR ' as kegiatan, ''as Jumlah6,  18 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Tetanus Neonatorium ' as kegiatan, ''as Jumlah6,  19 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- BBLR dirujuk ke RSU ' as kegiatan, ''as Jumlah6,  20 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Tetanus Neonatorium dirujuk ke RSU ' as kegiatan, ''as Jumlah6,  21 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'I' as 'KELOMPOK',   'Pelayanan Bayi ' as Program,  '- Oleh sebab lain ' as kegiatan, ''as Jumlah6,  22 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'J' as 'KELOMPOK',   'Pelayanan Anak Balita' as Program,  'Kunjungan baru diperiksa ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'J' as 'KELOMPOK',   'Pelayanan Anak Balita' as Program,  'Kunjungan baru drujuk ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'J' as 'KELOMPOK',   'Pelayanan Anak Balita' as Program,  'Kunjungan lama diperiksa ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'J' as 'KELOMPOK',   'Pelayanan Anak Balita' as Program,  'Kunjungan lama dirujuk ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'J' as 'KELOMPOK',   'Pelayanan Anak Balita' as Program,  'Jumlah kesakitan dan kematian anak balita ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah bayi divaksinasi campak  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah bayi divaksinasi DPT I ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah bayi 0 - 7 hari divaksinasi hepatitis B ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah bayi > 7 hari divaksinasi hepatitis B ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah Ibu Hamil divaksinasi TT I ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah Ibu Hamil divaksinasi TT II ' as kegiatan, ''as Jumlah6,  6 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah Ibu Hamil divaksinasi TT Boster ' as kegiatan, ''as Jumlah6,  7 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah wanita usia subur/calon pengantin (WUS), divaksinasi TT I ' as kegiatan, ''as Jumlah6,  8 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah murid SD kelas I divaksinasi DP ' as kegiatan, ''as Jumlah6,  9 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah murid SD kelas II dan III divaksinasi TT ' as kegiatan, ''as Jumlah6,  10 as iRow
+UNION ALL
+select  'KESEHATAN IBU DAN ANAK' as 'JUDUL',  'K' as 'KELOMPOK',   'IMUNISASI ' as Program,  'Jumlah bayi divaksinasi BCG ' as kegiatan, ''as Jumlah6,  11 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'A' as 'KELOMPOK',   'Acute Flaccid Paralysis (AFP) ' as Program,  'Jumlah kasus AFP baru (0 - 15 tahun) ditemukan  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'A' as 'KELOMPOK',   'Acute Flaccid Paralysis (AFP) ' as Program,  'Jumlah kasus tetanus neonatorum ditemukan ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'B' as 'KELOMPOK',   'Tetanus Neonatorum ' as Program,  'Jumlah kasus tetanus neonatorum ditemukan  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'B' as 'KELOMPOK',   'Tetanus Neonatorum ' as Program,  'Jumlah kasus tetanus neonatorum dilacak ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'C' as 'KELOMPOK',   'Malaria ' as Program,  'Jumlah penderita malaria berat dan komplikasi  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'C' as 'KELOMPOK',   'Malaria ' as Program,  'Jumlah Bumil yang memperoleh pengobatan profilaksis/pencegahan  ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'C' as 'KELOMPOK',   'Malaria ' as Program,  'Jumlah rumah yang disemprot  ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'C' as 'KELOMPOK',   'Malaria ' as Program,  'Jumlah penderita malaria klinis  ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'C' as 'KELOMPOK',   'Malaria ' as Program,  'Jumlah penderita pemeriksaan lab  ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'D' as 'KELOMPOK',   'D B D (Demam Berdarah Dengue) ' as Program,  'Jumlah pelacakan penderita DBD  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'D' as 'KELOMPOK',   'D B D (Demam Berdarah Dengue) ' as Program,  'Jumlah fogging fokus  ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'D' as 'KELOMPOK',   'D B D (Demam Berdarah Dengue) ' as Program,  'Jumlah desa/kelurahan diabatisasi selektif  ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'D' as 'KELOMPOK',   'D B D (Demam Berdarah Dengue) ' as Program,  'Jumlah desa/kelurahan dilakukan Pemberantasan Sarang Nyamuk  ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'D' as 'KELOMPOK',   'D B D (Demam Berdarah Dengue) ' as Program,  'Jumlah rumah yang dilakukan pemeriksaan jentik  ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'D' as 'KELOMPOK',   'D B D (Demam Berdarah Dengue) ' as Program,  'Jumlah rumah yang ada jentik  ' as kegiatan, ''as Jumlah6,  6 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'E' as 'KELOMPOK',   'R a b i e s ' as Program,  'Jumlah penderita digigit oleh hewan penular rabies  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'E' as 'KELOMPOK',   'R a b i e s ' as Program,  'Jumlah penderita gigitan yg di Vaksin Anti Rabies (VAR) atau VAR (+) Serum Anti Rabies (SAR)  ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'F' as 'KELOMPOK',   'Filaria ' as Program,  'Jumlah desa endemis  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'F' as 'KELOMPOK',   'Filaria ' as Program,  'Jumlah desa dengan cakupan pengobatan massal > 80 %  ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'G' as 'KELOMPOK',   'PENYAKIT ZOONOSIS LAIN (Antraks)' as Program,  'Jumlah yang diobati ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'H' as 'KELOMPOK',   'Frambusia ' as Program,  'Jumlah penduduk 0 - 14 tahun yang diperiksa untuk Frambusia ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'H' as 'KELOMPOK',   'Frambusia ' as Program,  'Jumlah penderita Frambusia yang ditemukan ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'H' as 'KELOMPOK',   'Frambusia ' as Program,  'Jumlah penderita/kontak penderita yang diobati ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'I' as 'KELOMPOK',   'Diare ' as Program,  'Jumlah penderita diare (termasuk tersangka kolera & disentri) dapat oralit  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'I' as 'KELOMPOK',   'Diare ' as Program,  'Jumlah penderita diare (termasuk tersangka kolera & disentri) dapat infus ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'I' as 'KELOMPOK',   'Diare ' as Program,  'Jumlah penderita diare (termasuk tersangka kolera & disentri) dapat antibiotik  ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'J' as 'KELOMPOK',   'ISPA ' as Program,  'Jumlah penderita Pneumonia ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'J' as 'KELOMPOK',   'ISPA ' as Program,  'Jumlah penderita Pneumonia balita dirujuk dokter ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'K' as 'KELOMPOK',   ' TB Paru' as Program,  'Jumlah penderita BTA positif baru diobati ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'K' as 'KELOMPOK',   'TB Paru' as Program,  'Jumlah penderita BTA negatif dan dengan Ronsen (+) diobati ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'K' as 'KELOMPOK',   'TB Paru' as Program,  'Jumlah penderita mengikuti pengobatan lengkap ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'K' as 'KELOMPOK',   'TB Paru' as Program,  'Jumlah penderita TB Paru yang sembuh ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'K' as 'KELOMPOK',   'TB Paru' as Program,  'Jumlah penderita kambuh ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita terdaftar (PB/Pausibasiler + MB/Multibasiler)  ' as kegiatan, ''as Jumlah6,  1 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita baru yang ditemukan  ' as kegiatan, ''as Jumlah6,  2 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita MB di antara kasus baru  ' as kegiatan, ''as Jumlah6,  3 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita baru menurut cacat tingkat II  ' as kegiatan, ''as Jumlah6,  4 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita MB yang mendapat pengobatan MDT  ' as kegiatan, ''as Jumlah6,  5 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita PB yang mendapat pengobatan MDT  ' as kegiatan, ''as Jumlah6,  6 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita MB yang mendapat pengobatan MDT komplit (RFT)  ' as kegiatan, ''as Jumlah6,  7 as iRow
+UNION ALL
+select  'PENGAMATAN PENYAKIT MENULAR' as 'JUDUL',  'L' as 'KELOMPOK',   'Kusta ' as Program,  'Jumlah penderita PB yang mendapat pengobatan MDT komplit (RFT)  ' as kegiatan, ''as Jumlah6,  8 as iRow
+) X]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="KABKOTA" class="java.lang.String"/>
+	<field name="KECAMATAN" class="java.lang.String"/>
+	<field name="PUSTU_YG_ADA" class="java.lang.String"/>
+	<field name="YANG_LAPOR" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="NAMA_MENGETAHUI" class="java.lang.String"/>
+	<field name="NIP_MENGETAHUI" class="java.lang.String"/>
+	<field name="LOKASI" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="NAMA_PELAPOR" class="java.lang.String"/>
+	<field name="NIP_PELAPOR" class="java.lang.String"/>
+	<field name="JUDUL" class="java.lang.String"/>
+	<field name="KELOMPOK" class="java.lang.String"/>
+	<field name="Program" class="java.lang.String"/>
+	<field name="kegiatan" class="java.lang.String"/>
+	<field name="Jumlah6" class="java.lang.Object"/>
+	<field name="iRow" class="java.lang.Long"/>
+	<group name="KELOMPOK">
+		<groupExpression><![CDATA[$F{KELOMPOK}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement style="SubTitle" x="164" y="1" width="220" height="17" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Program}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="423" y="1" width="85" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Jumlah]]></text>
+				</staticText>
+				<line>
+					<reportElement x="417" y="1" width="1" height="20"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="555" height="1"/>
+				</line>
+				<line>
+					<reportElement x="554" y="0" width="1" height="20"/>
+				</line>
+				<line>
+					<reportElement x="0" y="1" width="1" height="20"/>
+				</line>
+				<staticText>
+					<reportElement x="126" y="0" width="14" height="17"/>
+					<textElement markup="none"/>
+					<text><![CDATA[:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="SubTitle" x="9" y="3" width="126" height="17" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{JUDUL}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="306" y="1" width="100" height="20"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="111">
+			<staticText>
+				<reportElement style="Title" x="0" y="0" width="555" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[LAPORAN BULANAN (LB3)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Title" x="1" y="21" width="554" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[KEGIATAN GIZI, KIA, IMUNISASI & PENGAMATAN PENYAKIT MENULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="73" width="100" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="116" y="73" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="87" width="100" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kabupaten :
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="116" y="58" width="100" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="116" y="88" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KABKOTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="58" width="100" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kode Puskesmas : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="269" y="58" width="68" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Yang Lapor  :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="423" y="72" width="22" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="456" y="72" width="44" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="367" y="72" width="44" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="269" y="73" width="68" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="28" y="0" width="383" height="13"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kegiatan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="499" y="0" width="55" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Jumlah6}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="13" width="554" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="417" y="1" width="1" height="12"/>
+			</line>
+			<line>
+				<reportElement x="554" y="1" width="1" height="12"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="44" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="501" y="18" width="40" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="1" y="18" width="197" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Column header" x="423" y="18" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="145" splitType="Stretch">
+			<textField>
+				<reportElement x="9" y="70" width="166" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="10" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskemas]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

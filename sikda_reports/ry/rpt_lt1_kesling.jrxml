@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_lt1_kesling" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="579"/>
+	<property name="ireport.y" value="192"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2,
+$P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'LEVEL_NAME' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT P.PROVINSI FROM sys_setting S INNER JOIN mst_provinsi  P
+ON S.KEY_VALUE=P.KD_PROVINSI WHERE
+S.KEY_DATA = 'PROVINSI' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS PROVINSI,
+(SELECT P.KABUPATEN FROM sys_setting S INNER JOIN mst_kabupaten  P
+ON S.KEY_VALUE=P.KD_KABUPATEN WHERE
+S.KEY_DATA = 'KABUPATENKOTA' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KABKOTA,
+(SELECT P.KECAMATAN FROM sys_setting S INNER JOIN mst_kecamatan  P
+ON S.KEY_VALUE=P.KD_KECAMATAN WHERE
+S.KEY_DATA = 'KECAMATAN' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KECAMATAN,
+ '' AS 'PUSTU_YG_ADA',
+ '' AS 'YANG_LAPOR',
+ '' AS 'TAHUN',
+ '' AS 'NAMA_MENGETAHUI',
+ '' AS 'NIP_MENGETAHUI',
+ '' AS 'LOKASI',
+ '' AS 'TANGGAL',
+ '' AS 'NAMA_PELAPOR',
+ '' AS 'NIP_PELAPOR', X.*
+FROM (
+SELECT
+ 0 AS 'SD_SAB',
+ 0 AS 'SD_JAMBAN',
+ 0 AS 'SD_TPS',
+ 0 AS 'SD_WS',
+ 0 AS 'SLTP_SAB',
+ 0 AS 'SLTP_JAMBAN',
+ 0 AS 'SLTP_TPS',
+ 0 AS 'SLTP_WS',
+ 0 AS 'SLTA_SAB',
+ 0 AS 'SLTA_JAMBAN',
+ 0 AS 'SLTA_TPS',
+ 0 AS 'SLTA_WS'
+) X]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="KABKOTA" class="java.lang.String"/>
+	<field name="KECAMATAN" class="java.lang.String"/>
+	<field name="PUSTU_YG_ADA" class="java.lang.String"/>
+	<field name="YANG_LAPOR" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="NAMA_MENGETAHUI" class="java.lang.String"/>
+	<field name="NIP_MENGETAHUI" class="java.lang.String"/>
+	<field name="LOKASI" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="NAMA_PELAPOR" class="java.lang.String"/>
+	<field name="NIP_PELAPOR" class="java.lang.String"/>
+	<field name="SD_SAB" class="java.lang.Integer"/>
+	<field name="SD_JAMBAN" class="java.lang.Integer"/>
+	<field name="SD_TPS" class="java.lang.Integer"/>
+	<field name="SD_WS" class="java.lang.Integer"/>
+	<field name="SLTP_SAB" class="java.lang.Integer"/>
+	<field name="SLTP_JAMBAN" class="java.lang.Integer"/>
+	<field name="SLTP_TPS" class="java.lang.Integer"/>
+	<field name="SLTP_WS" class="java.lang.Integer"/>
+	<field name="SLTA_SAB" class="java.lang.Integer"/>
+	<field name="SLTA_JAMBAN" class="java.lang.Integer"/>
+	<field name="SLTA_TPS" class="java.lang.Integer"/>
+	<field name="SLTA_WS" class="java.lang.Integer"/>
+	<variable name="v_sd_sab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SD_SAB}]]></variableExpression>
+	</variable>
+	<variable name="v_sd_jamban" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SD_JAMBAN}]]></variableExpression>
+	</variable>
+	<variable name="v_sd_tps" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SD_TPS}]]></variableExpression>
+	</variable>
+	<variable name="v_sd_ws" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SD_WS}]]></variableExpression>
+	</variable>
+	<variable name="v_sltp_sab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTP_SAB}]]></variableExpression>
+	</variable>
+	<variable name="v_sltp_jamban" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTP_JAMBAN}]]></variableExpression>
+	</variable>
+	<variable name="v_sltp_tps" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTP_TPS}]]></variableExpression>
+	</variable>
+	<variable name="v_sltp_ws" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTP_WS}]]></variableExpression>
+	</variable>
+	<variable name="v_slta_sab" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTA_SAB}]]></variableExpression>
+	</variable>
+	<variable name="v_slta_jamban" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTA_JAMBAN}]]></variableExpression>
+	</variable>
+	<variable name="v_slta_tps" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTA_TPS}]]></variableExpression>
+	</variable>
+	<variable name="v_slta_ws" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SLTA_WS}]]></variableExpression>
+	</variable>
+	<group name="pkm">
+		<groupExpression><![CDATA[$F{KD_PUSKESMAS}]]></groupExpression>
+		<groupHeader>
+			<band height="53">
+				<staticText>
+					<reportElement x="1" y="12" width="20" height="20"/>
+					<textElement/>
+					<text><![CDATA[No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="23" y="12" width="131" height="20"/>
+					<textElement/>
+					<text><![CDATA[Nama Puskesmas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="163" y="4" width="139" height="20"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Jumlah SD Dan MI]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="163" y="33" width="32" height="20"/>
+					<textElement/>
+					<text><![CDATA[SAB]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="318" y="31" width="32" height="20"/>
+					<textElement/>
+					<text><![CDATA[SAB]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="239" y="32" width="35" height="20"/>
+					<textElement/>
+					<text><![CDATA[TPS]]></text>
+				</staticText>
+				<line>
+					<reportElement x="160" y="28" width="462" height="1"/>
+				</line>
+				<line>
+					<reportElement x="350" y="27" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement x="195" y="29" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement x="159" y="0" width="1" height="52"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="1" height="52"/>
+				</line>
+				<line>
+					<reportElement x="22" y="0" width="1" height="52"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="622" height="1"/>
+				</line>
+				<line>
+					<reportElement x="314" y="1" width="1" height="52"/>
+				</line>
+				<staticText>
+					<reportElement x="323" y="4" width="134" height="20"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Jumlah SLTP Dan MTs]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="354" y="31" width="51" height="20"/>
+					<textElement/>
+					<text><![CDATA[JAMBAN]]></text>
+				</staticText>
+				<line>
+					<reportElement x="406" y="28" width="1" height="24"/>
+				</line>
+				<staticText>
+					<reportElement x="409" y="31" width="29" height="20"/>
+					<textElement/>
+					<text><![CDATA[TPS]]></text>
+				</staticText>
+				<line>
+					<reportElement x="473" y="1" width="1" height="52"/>
+				</line>
+				<staticText>
+					<reportElement x="559" y="31" width="26" height="20"/>
+					<textElement/>
+					<text><![CDATA[TPS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="476" y="4" width="143" height="20"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Jumlah SLTA Dan MA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="476" y="31" width="26" height="20"/>
+					<textElement/>
+					<text><![CDATA[SAB]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="509" y="31" width="42" height="20"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[JAMBAN]]></text>
+				</staticText>
+				<line>
+					<reportElement x="505" y="28" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement x="555" y="28" width="1" height="24"/>
+				</line>
+				<staticText>
+					<reportElement x="195" y="33" width="41" height="20"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[JAMBAN]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="277" y="32" width="34" height="20"/>
+					<textElement/>
+					<text><![CDATA[WS]]></text>
+				</staticText>
+				<line>
+					<reportElement x="236" y="28" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement x="275" y="28" width="1" height="24"/>
+				</line>
+				<staticText>
+					<reportElement x="442" y="31" width="29" height="20"/>
+					<textElement/>
+					<text><![CDATA[WS]]></text>
+				</staticText>
+				<line>
+					<reportElement x="438" y="28" width="1" height="24"/>
+				</line>
+				<staticText>
+					<reportElement x="593" y="31" width="26" height="20"/>
+					<textElement/>
+					<text><![CDATA[WS]]></text>
+				</staticText>
+				<line>
+					<reportElement x="587" y="28" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement x="621" y="1" width="1" height="52"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="60">
+				<staticText>
+					<reportElement x="54" y="39" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total   :  ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="195" y="39" width="35" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sd_jamban}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="163" y="39" width="32" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sd_sab}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="276" y="39" width="35" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sd_ws}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="239" y="39" width="35" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sd_tps}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="447" y="40" width="24" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sltp_ws}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="409" y="39" width="27" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sltp_tps}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="318" y="39" width="30" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sltp_sab}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="358" y="39" width="40" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_sltp_jamban}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="593" y="39" width="26" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_slta_ws}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="562" y="39" width="23" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{SLTA_TPS}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="477" y="39" width="28" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_slta_sab}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="509" y="39" width="42" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{v_slta_jamban}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="1" y="59" width="622" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="159" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="195" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="237" y="1" width="1" height="58"/>
+				</line>
+				<line>
+					<reportElement x="275" y="1" width="1" height="58"/>
+				</line>
+				<line>
+					<reportElement x="314" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="350" y="1" width="1" height="58"/>
+				</line>
+				<line>
+					<reportElement x="406" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="621" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="438" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="473" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="505" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="555" y="0" width="1" height="59"/>
+				</line>
+				<line>
+					<reportElement x="588" y="0" width="1" height="59"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="162">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN TAHUNAN (LT1)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="802" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PERKEMBANGAN KESEHATAN LINGKUNGAN	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="45" width="100" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kode Puskesmas :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="59" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="72" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kecamatan :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="85" width="100" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pustu yang ada :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="99" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kabupaten/Kota :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="112" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Propinsi :
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="114" y="85" width="100" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PUSTU_YG_ADA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="99" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KABKOTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="112" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROVINSI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="72" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KECAMATAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="59" width="160" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="45" width="100" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="502" y="73" width="94" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Yang Lapor :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="502" y="86" width="94" height="13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Bulan : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="502" y="99" width="94" height="13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Tahun : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="616" y="72" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{YANG_LAPOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="616" y="99" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TAHUN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="616" y="86" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BULAN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="23" y="0" width="131" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="0" width="32" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SD_SAB}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="196" y="0" width="35" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SD_JAMBAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="239" y="0" width="35" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SD_TPS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="277" y="0" width="33" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SD_WS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="358" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTP_JAMBAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="0" width="32" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTP_SAB}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="447" y="0" width="24" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTP_WS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="409" y="0" width="27" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTP_TPS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="509" y="0" width="42" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTA_JAMBAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="477" y="0" width="28" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTA_SAB}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="591" y="0" width="28" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTA_WS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="559" y="0" width="26" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SLTA_TPS}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="622" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="36" width="622" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="37"/>
+			</line>
+			<line>
+				<reportElement x="22" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="159" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="195" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="237" y="2" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="275" y="1" width="1" height="34"/>
+			</line>
+			<line>
+				<reportElement x="314" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="350" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="406" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="621" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="438" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="473" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="505" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="555" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="588" y="1" width="1" height="35"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="107" splitType="Stretch">
+			<staticText>
+				<reportElement x="591" y="93" width="25" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NIP.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="82" width="22" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NIP.
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="82" width="100" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="20" width="100" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Mengetahui/Menyetujui :
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="591" y="93" width="100" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="585" y="20" width="100" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pelapor :
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="657" y="9" width="96" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TANGGAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="619" y="93" width="88" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NIP_PELAPOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="593" y="82" width="105" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PELAPOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="587" y="9" width="63" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOKASI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="85" width="96" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NIP_MENGETAHUI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="6" y="72" width="96" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_MENGETAHUI}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

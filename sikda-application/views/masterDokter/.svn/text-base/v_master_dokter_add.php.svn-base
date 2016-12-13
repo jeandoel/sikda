@@ -1,0 +1,96 @@
+<script>
+$(document).ready(function(){
+		$('#form1masterDokteradd').ajaxForm({
+			beforeSend: function() {
+				achtungShowLoader();	
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			},
+			complete: function(xhr) {
+				achtungHideLoader();
+				if(xhr.responseText!=='OK'){
+					$.achtung({message: xhr.responseText, timeout:5});
+				}else{
+					$.achtung({message: 'Proses Tambah Data Berhasil', timeout:5});
+					$("#t27","#tabs").empty();
+					$("#t27","#tabs").load('c_master_dokter'+'?_=' + (new Date()).getTime());
+				}
+			}
+		});
+		
+		$('#nama_puskesmas_hidden').focus(function(){
+			$("#dialog_cari_namapuskesmas").dialog({
+				autoOpen: false,
+				modal:true,
+				width: 500,
+				height: 405,
+				buttons : {
+					"Cancel" : function() {
+					  $(this).dialog("close");
+					}
+				}
+			});
+			$('#dialog_cari_namapuskesmas').load('c_master_puskesmas/puskesmaspopup?id_caller=form1masterDokteradd', function() {
+				$("#dialog_cari_namapuskesmas").dialog("open");
+			});
+		});
+})
+</script>
+<script>
+	$('#backlistmasterDokter').click(function(){
+		$("#t27","#tabs").empty();
+		$("#t27","#tabs").load('c_master_dokter'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div id="dialog_cari_namapuskesmas" title="Puskesmas"></div>
+<div class="mycontent">
+<div class="formtitle">Tambah Dokter</div>
+<div class="backbutton"><span class="kembali" id="backlistmasterDokter">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" id="form1masterDokteradd" method="post" action="<?=site_url('c_master_dokter/addprocess')?>" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>Kode Dokter</label>
+		<input type="text" name="kd_dokter" autocomplete="off" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Nama</label>
+		<input type="text" name="nama" autocomplete="off" id="text2" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>NIP</label>
+		<input type="text" name="nip" autocomplete="off" id="text3" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Jabatan</label>
+		<input type="text" name="jabatan" autocomplete="off" id="text4" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Status</label>
+		<input type="text" name="status" autocomplete="off" id="text5" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Puskesmas</label>
+		<input type="text" readonly name="kd_puskesmas" autocomplete="off" id="nama_puskesmas_hidden" value="" />
+		<input type="text" placeholder="Puskesmas" readonly name="puskesmas" autocomplete="off" id="nama_puskesmas" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<input type="submit" name="bt1" value="Proses Data"/>
+		</span>
+	</fieldset>	
+</form>
+</div >

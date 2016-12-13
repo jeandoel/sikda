@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_lb4" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="979d82ca-ad22-4581-9a35-0b11c2dd9c7b">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="37"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2,
+(SELECT P.PROVINSI FROM sys_setting S INNER JOIN mst_provinsi  P
+ON S.KEY_VALUE=P.KD_PROVINSI WHERE
+S.KEY_DATA = 'KD_PROV' AND SUBSTRING(S.PUSKESMAS,2,4)=$P{parameter1} LIMIT 1) AS PROVINSI,
+(SELECT P.KABUPATEN FROM sys_setting S INNER JOIN mst_kabupaten  P
+ON S.KEY_VALUE=P.KD_KABUPATEN WHERE
+S.KEY_DATA = 'KD_KABKOTA' AND SUBSTRING(S.PUSKESMAS,2,4)=$P{parameter1} LIMIT 1) AS KABKOTA,
+(SELECT P.KECAMATAN FROM sys_setting S INNER JOIN mst_kecamatan  P
+ON S.KEY_VALUE=P.KD_KECAMATAN WHERE
+S.KEY_DATA = 'KD_KEC' AND SUBSTRING(S.PUSKESMAS,2,4)=$P{parameter1} LIMIT 1) AS KECAMATAN,
+ '' AS 'PUSTU_YG_ADA',
+ '' AS 'YANG_LAPOR',
+ 'DARI PARAMETER PHP' AS 'TAHUN',
+ '' AS 'NAMA_MENGETAHUI',
+ '' AS 'NIP_MENGETAHUI',
+ '' AS 'LOKASI',
+ 'TANGGAL HARI INI' AS 'TANGGAL',
+ '' AS 'NAMA_PELAPOR',
+ '' AS 'NIP_PELAPOR', X.*
+FROM (
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'Jumlah Kunjungan Puskesmas' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2} ) AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'Jumlah Kunjungan dengan Kartu Sehat' AS 'URAIAN', (SELECT
+COUNT(V.KD_PASIEN) as JML
+FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.JENIS_PASIEN = 'JAMKESMAS' OR V.JENIS_PASIEN = 'JAMKESDA'
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2})) AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'Jumlah Kunjungan Rawat Jalan' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.UNIT_PELAYANAN = 'RJ'
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'a. Jumlah Kunjungan Rawat Jalan Baru' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.UNIT_PELAYANAN = 'RJ'
+AND V.JNS_KASUS = 'BARU'
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'b. Jumlah Kunjungan Rawat Jalan Lama' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.UNIT_PELAYANAN = 'RJ'
+AND (V.JNS_KASUS = 'LAMA' OR V.JNS_KASUS IS NULL)
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH , 5 as iRow
+UNION ALL
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'Jumlah Kunjungan Rawat Jalan Gol Umur >=60' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.UMURINDAYS >= 21536
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH , 6 as iRow
+UNION ALL
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'Jumlah Kunjungan Rawat Jalan Gigi' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.NM_UNIT = 'GIGI'
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH , 7 as iRow
+UNION ALL
+SELECT 'I' AS 'GROUP', 'KUNJUNGAN PUSKESMAS' AS 'NAMA_GROUP', 'Jumlah Kunjungan Polindes' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_kunjungan AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.KD_UNIT_LAYANAN = 'POLIDES'
+AND (V.TGL_MASUK BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH , 8 as iRow
+
+UNION ALL
+SELECT 'II' AS 'GROUP', 'RAWAT TINGGAL' AS 'NAMA_GROUP', 'Jumlah Penderita yang Dirawat' AS 'URAIAN', (SELECT COUNT(V.KD_PASIEN) as JML FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.UNIT_PELAYANAN = 'RI'
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'II' AS 'GROUP', 'RAWAT TINGGAL' AS 'NAMA_GROUP', 'Jumlah Penderita yang Keluar' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'II' AS 'GROUP', 'RAWAT TINGGAL' AS 'NAMA_GROUP', 'Jumlah Hari Perawatan' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'II' AS 'GROUP', 'RAWAT TINGGAL' AS 'NAMA_GROUP', 'Jumlah Ibu Hamil Melahirkan, Nifas dengan Kelainan yang Dirawat' AS 'URAIAN', 0 AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'II' AS 'GROUP', 'RAWAT TINGGAL' AS 'NAMA_GROUP', 'Jumlah balita (Sakit, dengan kelainan) yang Dirawat' AS 'URAIAN', 0 AS JUMLAH , 5 as iRow
+UNION ALL
+SELECT 'II' AS 'GROUP', 'RAWAT TINGGAL' AS 'NAMA_GROUP', 'Jumlah Kasus Cidera/ Kecelakaan yang Dirawat' AS 'URAIAN', 0 AS JUMLAH , 6 as iRow
+UNION ALL
+SELECT 'II' AS 'GROUP', 'RAWAT TINGGAL' AS 'NAMA_GROUP', 'Jumlah Penderita dengan Kasus Lainnya' AS 'URAIAN', 0 AS JUMLAH , 7 as iRow
+
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Penderita TB Baru yang Dibina' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Penderita TB Kusta yang Dibina' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Ibu Hamil Melahirkan, Nifas Risti yang Dibina' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Bayi Risti (Pneumonia Berat, BBLR) yang Dibina ' AS 'URAIAN', 0 AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Tetanus Neonatorum' AS 'URAIAN', 0 AS JUMLAH , 5 as iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Anak Balita Risti yang Dibina' AS 'URAIAN', 0 AS JUMLAH , 6 as iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Usila Balita Risti yang Dibina' AS 'URAIAN', 0 AS JUMLAH , 7 as iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga dengan Resiko Lainnya yang Dibina' AS 'URAIAN', 0 AS JUMLAH , 8 as iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Keluarga yang Mempunyai Kartu Sehat yang Dibina' AS 'URAIAN', 0 AS JUMLAH , 9 as iRow
+UNION ALL
+SELECT 'III' AS 'GROUP', 'KEGIATAN PERAWATAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah Panti/ Kelompok Khusus yang Dibina' AS 'URAIAN', 0 AS JUMLAH , 10 as iRow
+
+UNION ALL
+SELECT 'IV' AS 'GROUP', 'FREKUENSI KEGIATAN PUSKESMAS DILUAR GEDUNG' AS 'NAMA_GROUP', 'Jumlah Frekuensi Kegiatan Gizi Masyarakat' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'IV' AS 'GROUP', 'FREKUENSI KEGIATAN PUSKESMAS DILUAR GEDUNG' AS 'NAMA_GROUP', 'Jumlah Frekuensi Kegiatan Imunisasi' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'IV' AS 'GROUP', 'FREKUENSI KEGIATAN PUSKESMAS DILUAR GEDUNG' AS 'NAMA_GROUP', 'Jumlah Frekuensi Kegiatan Pemberantasan Penyakit' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'IV' AS 'GROUP', 'FREKUENSI KEGIATAN PUSKESMAS DILUAR GEDUNG' AS 'NAMA_GROUP', 'Jumlah Frekuensi Kegiatan Kesling' AS 'URAIAN', 0 AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'IV' AS 'GROUP', 'FREKUENSI KEGIATAN PUSKESMAS DILUAR GEDUNG' AS 'NAMA_GROUP', 'Jumlah Frekuensi Kegiatan Promosi Kesehatan' AS 'URAIAN', 0 AS JUMLAH , 5 as iRow
+
+UNION ALL
+SELECT 'V' AS 'GROUP', 'PENDUDUK YANG MENGGUNAKAN SARANAN KESEHATAN SWASTA' AS 'NAMA_GROUP', 'Jumlah Kunjungan pada Praktek Dokter Perorangan' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'V' AS 'GROUP', 'PENDUDUK YANG MENGGUNAKAN SARANAN KESEHATAN SWASTA' AS 'NAMA_GROUP', 'Jumlah Kunjungan pada Praktek Dokter Gigi Perorangan' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'V' AS 'GROUP', 'PENDUDUK YANG MENGGUNAKAN SARANAN KESEHATAN SWASTA' AS 'NAMA_GROUP', 'Jumlah Kunjungan pada Praktek Dokter Kelompok/ Bersama' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'V' AS 'GROUP', 'PENDUDUK YANG MENGGUNAKAN SARANAN KESEHATAN SWASTA' AS 'NAMA_GROUP', 'Jumlah Kunjungan pada Praktek Bidan/ Rumah Bersalin' AS 'URAIAN', 0 AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'V' AS 'GROUP', 'PENDUDUK YANG MENGGUNAKAN SARANAN KESEHATAN SWASTA' AS 'NAMA_GROUP', 'Jumlah Kunjungan pada Balai Pengobatan/ Klinik Kesehatan' AS 'URAIAN', 0 AS JUMLAH , 5 as iRow
+
+UNION ALL
+SELECT 'VI' AS 'GROUP', 'PELAYANAN MEDIK DASAR KESEHATAN GIGI' AS 'NAMA_GROUP', 'Jumlah Penambahan Gigi Tetap' AS 'URAIAN', (SELECT
+COUNT(V.KD_PASIEN) as JML
+FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND (V.KD_TINDAKAN BETWEEN '36' AND '41')
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'VI' AS 'GROUP', 'PELAYANAN MEDIK DASAR KESEHATAN GIGI' AS 'NAMA_GROUP', 'Jumlah Pencabutan Gigi Tetap' AS 'URAIAN', (SELECT
+COUNT(V.KD_PASIEN) as JML
+FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.KD_TINDAKAN ='33' OR V.KD_TINDAKAN ='34'
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2})) AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'VI' AS 'GROUP', 'PELAYANAN MEDIK DASAR KESEHATAN GIGI' AS 'NAMA_GROUP', 'Jumlah Murid SD yang Perlu Perawatan Kesehatan Gigi' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'VI' AS 'GROUP', 'PELAYANAN MEDIK DASAR KESEHATAN GIGI' AS 'NAMA_GROUP', 'Jumlah Murid SD yang Mendapatkan Perawatan Kesehatan Gigi' AS 'URAIAN', 0 AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'VI' AS 'GROUP', 'PELAYANAN MEDIK DASAR KESEHATAN GIGI' AS 'NAMA_GROUP', 'Jumlah Perawatan Gigi Lainnya' AS 'URAIAN', (SELECT
+COUNT(V.KD_PASIEN) as JML
+FROM vw_rpt_penyakitpasien_grp AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND (V.KD_TINDAKAN  BETWEEN '29' AND '55')
+AND (V.KD_TINDAKAN  NOT BETWEEN '36' AND '41')
+AND V.KD_TINDAKAN  <> '36' AND V.KD_TINDAKAN  <> '41'
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH , 5 as iRow
+
+UNION ALL
+SELECT 'VII' AS 'GROUP', 'KEGIATAN PELAYANAN JPKM' AS 'NAMA_GROUP', 'Jumlah Peserta Askes' AS 'URAIAN', (SELECT
+COUNT(V.KD_PASIEN) as JML
+FROM pasien AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND V.KD_CUSTOMER = '0000000002' OR V.KD_CUSTOMER = '0000000006' OR V.KD_CUSTOMER = '0000000007' OR V.KD_CUSTOMER = '0000000009'
+AND (V.TGL_PENDAFTARAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'VII' AS 'GROUP', 'KEGIATAN PELAYANAN JPKM' AS 'NAMA_GROUP', 'Jumlah Kunjungan Peserta PT. Askes' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'VII' AS 'GROUP', 'KEGIATAN PELAYANAN JPKM' AS 'NAMA_GROUP', 'Jumlah Peserta Dana Sehat' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'VII' AS 'GROUP', 'KEGIATAN PELAYANAN JPKM' AS 'NAMA_GROUP', 'Jumlah Kunjungan Peserta Dana Sehat' AS 'URAIAN', 0 AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'VII' AS 'GROUP', 'KEGIATAN PELAYANAN JPKM' AS 'NAMA_GROUP', 'Jumlah Kunjungan Peserta Asuransi Kesehatan Lainnya' AS 'URAIAN', 0 AS JUMLAH , 5 as iRow
+UNION ALL
+SELECT 'VII' AS 'GROUP', 'KEGIATAN PELAYANAN JPKM' AS 'NAMA_GROUP', 'Jumlah Peserta Tabungan Sehat' AS 'URAIAN', 0 AS JUMLAH , 6 as iRow
+UNION ALL
+SELECT 'VII' AS 'GROUP', 'KEGIATAN PELAYANAN JPKM' AS 'NAMA_GROUP', 'Jumlah Peserta Tabulin' AS 'URAIAN', 0 AS JUMLAH , 7 as iRow
+
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah Sekolah Dasar(SD) dan Madrasah Ibtidaiyah(IM) kelas 1 dengan Kegiatan Penjaringan Kesehatan' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah Sekolah Dasar(SD) dan Madrasah Ibtidaiyah(IM) dengan Kegiatan UKGS' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah Sekolah Lanjutan Tingkat Pertama (SLTP) dan Madrasah Tsanawiyah kelas 1 dengan kegiatan penjaringan kesehatan' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah Sekolah Lanjutan Tingkat Atas (SLTA) dan Madrasah Aliyah  kelas 1 dengan kegiatan penjaringan kesehatan' AS 'URAIAN', 0 AS JUMLAH , 4 as iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah sekolah yang diperiksa sarana kesehatan lingkungan (sarana air bersih, pembuangan sampah, jamban dan air limbah)' AS 'URAIAN', 0 AS JUMLAH , 5 as iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah sekolah yang memenuhi syarat kesehatan lingkungan (sarana air bersih, pembuangan sampah, jamban dan air limbah)' AS 'URAIAN', 0 AS JUMLAH , 6 as iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah kunjungan pembianaan UKS ke sekolah' AS 'URAIAN', 0 AS JUMLAH , 7 as iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah SLTP, SLTA memperoleh konseling kesehatan remaja' AS 'URAIAN', 0 AS JUMLAH , 8 as iRow
+UNION ALL
+SELECT 'VIII' AS 'GROUP', 'KEGIATAN SEKOLAH' AS 'NAMA_GROUP', 'Jumlah Taman Kanak-Kanak (TK) melaksanakan kesehatan Anak Pra Sekolah' AS 'URAIAN', 0 AS JUMLAH , 9 as iRow
+
+UNION ALL
+SELECT 'IX' AS 'GROUP', 'KESEHATAN OLAH RAGA' AS 'NAMA_GROUP', 'Jumlah kelompok/klub olah raga yang dibina' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'IX' AS 'GROUP', 'KESEHATAN OLAH RAGA' AS 'NAMA_GROUP', 'Jumlah yang mendapatkan pelayanan kesehatan olah raga' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+
+UNION ALL
+SELECT 'X' AS 'GROUP', 'KEGIATAN PENYULUHAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Frekuensi Penyuluhan dalam wilayah puskesmas untuk kel. potensial' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'X' AS 'GROUP', 'KEGIATAN PENYULUHAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Frekuensi Penyuluhan kelompok dalam puskesmas' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'X' AS 'GROUP', 'KEGIATAN PENYULUHAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah desa yang melaksanakan PHBS' AS 'URAIAN', 0 AS JUMLAH, 3 AS iRow
+UNION ALL
+SELECT 'X' AS 'GROUP', 'KEGIATAN PENYULUHAN KESEHATAN MASYARAKAT' AS 'NAMA_GROUP', 'Jumlah penduduk yang merokok' AS 'URAIAN', 0 AS JUMLAH , 4 AS iRow
+
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Posyandu' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Posyandu Pratama' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Posyandu Madya' AS 'URAIAN', 0 AS JUMLAH, 3 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Posyandu Purnama' AS 'URAIAN', 0 AS JUMLAH , 4 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Kader Posyandu' AS 'URAIAN', 0 AS JUMLAH, 5 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Kader Posyandu yang aktif' AS 'URAIAN', 0 AS JUMLAH , 6 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah tanaman obat keluarga (TOGA)' AS 'URAIAN', 0 AS JUMLAH, 7 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah TOGA  Pratama' AS 'URAIAN', 0 AS JUMLAH, 8 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah TOGA  Madya' AS 'URAIAN', 0 AS JUMLAH, 9 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah TOGA Purnama' AS 'URAIAN', 0 AS JUMLAH , 10 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah TOGA Mandiri' AS 'URAIAN', 0 AS JUMLAH, 11 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Posyandu/Kelompok Lansia' AS 'URAIAN', 0 AS JUMLAH , 12 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Kelompok Remaja' AS 'URAIAN', 0 AS JUMLAH, 13 AS iRow
+UNION ALL
+SELECT 'XI' AS 'GROUP', 'KEGIATAN UKBM' AS 'NAMA_GROUP', 'Jumlah Desa yang melaksanakan PHBS Strata III dan IV' AS 'URAIAN', 0 AS JUMLAH , 14 AS iRow
+
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Rumah seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 1 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Rumah yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH , 2 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Rumah yang memenuhi syarat sanitasi dasar' AS 'URAIAN', 0 AS JUMLAH, 3 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Jamban Keluarga Seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 4 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Jamban keluarga yang diperiksa' AS 'URAIAN', 0 AS JUMLAH, 5 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Jamban Keluarga yang memenuhi syarat kesehatan' AS 'URAIAN', 0 AS JUMLAH , 6 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Tempat Sampah Seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 7 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Tempat Sampah yang diperiksa' AS 'URAIAN', 0 AS JUMLAH , 8 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Tempat Sampah yang memenuhi syarat kesehatan' AS 'URAIAN', 0 AS JUMLAH, 9 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Rumah dengan Pengelolaan Air Limbah Seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 10 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Rumah dengan Pengelolaan Air Limbah yang diperiksa' AS 'URAIAN', 0 AS JUMLAH, 11 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Rumah dengan Pengelolaan Air Limbah yang memenuhi syarat kesehatan' AS 'URAIAN', 0 AS JUMLAH ,12 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Sarana AIR Bersih seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 13 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Sarana PDAM seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 14 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Sumur Gali seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 15 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah PAH seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 16 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah SPT seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 17 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah sarana Air Bersih Yang diperiksa' AS 'URAIAN', 0 AS JUMLAH, 18 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah sarana Air Bersih Yang memenuhi syarat kesehatan' AS 'URAIAN', 0 AS JUMLAH, 19 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah sekolah  seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 20 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah sekolah yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH, 21 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah sekolah yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH , 22 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Madrasah seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 23 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Madrasah yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH , 24 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Madrasah yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH, 25 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Mesjid seluruhnya' AS 'URAIAN', 0 AS JUMLAH ,26 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Mesjid yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH, 27 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Mesjid yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH , 28 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Gereja seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 29 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Gereja yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH ,30 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Gereja yang memenuhi syarat kesehatan lingkungan ''URAIAN', 0 AS JUMLAH, 31 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pura seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 32 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pura yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH, 33 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pura yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH , 34 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pesantren seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 35 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pesantren yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH , 36 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pesantren yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH, 37 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Majelis Taklim seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 38 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Majelis Taklim yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH, 39 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Majelis Taklim yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH ,40 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Kantor seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 41 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Kantor yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH , 42 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Kantor yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH, 43 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Hotel seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 44 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Hotel yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH, 45 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Hotel yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH, 46 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Toko seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 47 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Toko yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH , 48 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Toko yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH, 49 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pasar seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 50 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pasar yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH, 51 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Pasar  yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH , 52 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Restoran / R. Makan seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 53 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Restoran / R. Makan yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH ,54 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Restoran / R. Makan  yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH, 55 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Salon Kecantikan  seluruhnya' AS 'URAIAN', 0 AS JUMLAH , 56 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Salon Kecantikan yang diperiksa kesehatan lingkungannya' AS 'URAIAN', 0 AS JUMLAH, 57 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Salon Kecantikan  yang memenuhi syarat kesehatan lingkungan' AS 'URAIAN', 0 AS JUMLAH , 58 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah industri rumah tangga makanan dan minuman seluruhnya' AS 'URAIAN', 0 AS JUMLAH, 59 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah industri rumah tangga makanan dan minuman yang diperiksa kesehatan ' AS 'URAIAN', 0 AS JUMLAH , 60 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah industri rumah tangga yang memenuhi syarat kesehatan' AS 'URAIAN', 0 AS JUMLAH, 61 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah Tempat Pengelolaan Pestisida ( TP2 )' AS 'URAIAN', 0 AS JUMLAH , 62 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah TP2 yang diperiksa' AS 'URAIAN', 0 AS JUMLAH, 63 AS iRow
+UNION ALL
+SELECT 'XII' AS 'GROUP', 'KESEHATAN LINGKUNGAN' AS 'NAMA_GROUP', 'Jumlah TP2 yang memenuhi syarat ' AS 'URAIAN', 0 AS JUMLAH , 64 AS iRow
+
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah spesimen darah yang diperiksa' AS 'URAIAN', (SELECT
+COUNT(V.KD_PASIEN) as JML
+FROM vw_rpt_lab AS V
+WHERE SUBSTRING(V.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND (KD_LAB BETWEEN '179' AND '193')
+AND (V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) ) AS JUMLAH ,1 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah spesimen air seni yang diperiksa' AS 'URAIAN', 0 AS JUMLAH, 2 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah spesimen tinja yang diperiksa' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan BTA/TBC (sputum)' AS 'URAIAN', 0 AS JUMLAH, 4 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan BTA/TBC (sputum) positif' AS 'URAIAN', 0 AS JUMLAH , 5 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan darah untuk Malaria' AS 'URAIAN', 0 AS JUMLAH, 6 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan darah untuk Malaria positif' AS 'URAIAN', 0 AS JUMLAH , 7 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan darah untuk Malaria positif P. Falsiparum' AS 'URAIAN', 0 AS JUMLAH, 8 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan BTA/Kusta (Reitz serum)' AS 'URAIAN', 0 AS JUMLAH , 9 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan BTA/Kusta (Reitz serum) positif' AS 'URAIAN', 0 AS JUMLAH, 10 AS iRow
+UNION ALL
+SELECT 'XIII' AS 'GROUP', 'LABORATORIUM' AS 'NAMA_GROUP', 'Jumlah pemeriksaan Laboratorium lainnya' AS 'URAIAN', 0 AS JUMLAH , 11 AS iRow
+
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Frekuensi pertemuan jaminan mutu' AS 'URAIAN', 0 AS JUMLAH ,1 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah identifikasi masalah jaminan mutu' AS 'URAIAN', 0 AS JUMLAH, 2 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah audit kasus dalam rangka peningkatan mutu ' AS 'URAIAN', 0 AS JUMLAH , 3 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah seluruh SOP yang telah dibuat sebelumnya' AS 'URAIAN', 0 AS JUMLAH, 4 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah SOP yang telah dibuat bulan ini' AS 'URAIAN', 0 AS JUMLAH , 5 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah SOP yang telah dikembangkan' AS 'URAIAN', 0 AS JUMLAH, 6 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah seluruh daftar tilik yang telah dibuat sebelumnya' AS 'URAIAN', 0 AS JUMLAH , 7 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah daftar tilik yang telah dibuat bulan ini' AS 'URAIAN', 0 AS JUMLAH, 8 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah survey kepatuhan/tilik kepatuhan terhadap SOP' AS 'URAIAN', 0 AS JUMLAH , 9 AS iRow
+UNION ALL
+SELECT 'XIV' AS 'GROUP', 'JAMINAN MUTU / QUALITY ASSURANCE' AS 'NAMA_GROUP', 'Jumlah survey kepuasan pelanggan bulan ini' AS 'URAIAN', 0 AS JUMLAH, 10 AS iRow
+) X]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="KABKOTA" class="java.lang.String"/>
+	<field name="KECAMATAN" class="java.lang.String"/>
+	<field name="PUSTU_YG_ADA" class="java.lang.String"/>
+	<field name="YANG_LAPOR" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="NAMA_MENGETAHUI" class="java.lang.String"/>
+	<field name="NIP_MENGETAHUI" class="java.lang.String"/>
+	<field name="LOKASI" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="NAMA_PELAPOR" class="java.lang.String"/>
+	<field name="NIP_PELAPOR" class="java.lang.String"/>
+	<field name="GROUP" class="java.lang.Long"/>
+	<field name="NAMA_GROUP" class="java.lang.String"/>
+	<field name="URAIAN" class="java.lang.String"/>
+	<field name="JUMLAH" class="java.lang.Long"/>
+	<field name="iRow" class="java.lang.Long"/>
+	<variable name="variable1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{JUMLAH}]]></variableExpression>
+	</variable>
+	<group name="GROUP">
+		<groupExpression><![CDATA[$F{GROUP}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<staticText>
+					<reportElement uuid="ff12a08c-8ad8-4913-a3ca-71ce474b73a8" x="480" y="1" width="52" height="15"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Jumlah]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="978fcdac-9225-4972-9b26-79c094813ac3" x="0" y="1" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement uuid="8eb81f5a-98fd-403a-9921-d96255f86e9e" x="30" y="1" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement uuid="d4ec4b8b-c251-4dad-83eb-7981d60916e3" x="554" y="1" width="1" height="17"/>
+				</line>
+				<line>
+					<reportElement uuid="61c1b070-6367-49c1-9bb2-cc624025a47d" x="476" y="1" width="1" height="17"/>
+				</line>
+				<textField>
+					<reportElement uuid="4e2e40f0-3cb9-491e-b55f-91eae002775f" x="4" y="3" width="34" height="15"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{GROUP}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="b342e639-2032-4fb3-a3df-1859d278f2da" style="SubTitle" x="38" y="3" width="243" height="15" forecolor="#000000"/>
+					<textElement verticalAlignment="Top">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{NAMA_GROUP}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="eb91dbf6-f953-4526-9a26-818bb73d1a36" x="1" y="1" width="554" height="1"/>
+				</line>
+				<staticText>
+					<reportElement uuid="1a5f8d73-fa04-4ae3-8f04-3140243f7c3d" x="242" y="3" width="100" height="15"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="19"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<pageHeader>
+		<band height="87">
+			<staticText>
+				<reportElement uuid="be7ceca8-6166-4bdb-a48d-8528c5dcec16" style="Title" x="3" y="1" width="548" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Laporan Bulanan (LB4) KABUPATEN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="019b00f4-6ffc-4eb1-ab8e-43ad06e971a1" style="SubTitle" x="3" y="26" width="548" height="22"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Kegiatan Puskesmas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="62552283-98d0-4122-bf2b-3ec65ba8d919" x="68" y="58" width="100" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kabupaten :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="71a7e652-040d-40f9-924e-9b210ca64c3f" x="459" y="58" width="21" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement uuid="e301e02a-8737-403d-b035-91e3a447ec19" x="488" y="59" width="44" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement uuid="f8c2e637-d8ed-4fa0-a147-cbff481e7869" x="415" y="59" width="44" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="fab972e7-2310-4f08-9cbd-7ca896d333ff" x="331" y="59" width="68" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="0b277b9f-366e-40f0-8da0-770de630e8e6" x="181" y="58" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KABKOTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4089c340-b54a-49a9-a49b-91890269685c" x="513" y="1" width="38" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JUMLAH}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="0bb63283-8570-4f08-af8a-446941548b3d" x="30" y="1" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement uuid="6184b01f-b0e7-41c7-82e9-62c50f8457d3" x="0" y="16" width="554" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="23c41714-633f-48f3-8f17-eff1d12cfeb4" x="0" y="1" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement uuid="b881ac58-2801-4bf1-9732-31ea051c8930" x="476" y="1" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement uuid="06485648-31e4-4624-b069-7f297508d18f" x="554" y="1" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement uuid="77c088fe-5cda-40e2-9a4d-5537b30f15f9" x="0" y="0" width="554" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="e0df0c56-d7c0-4a03-902e-e22fc6114d5d" x="5" y="1" width="304" height="15"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iRow}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a4eef8d2-e925-4c0e-b6c0-3034af2bb887" x="38" y="1" width="304" height="15"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{URAIAN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement uuid="e4fbaf87-6e41-458c-9c4b-095bb2394531" style="Column header" x="433" y="3" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="144aa453-de31-481c-b6f9-e78b6a108dcb" style="Column header" x="511" y="3" width="40" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="ead6f05e-ba6d-4d9f-a7d8-0fb1b58fc660" style="Column header" x="0" y="3" width="197" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="93" splitType="Stretch"/>
+	</summary>
+</jasperReport>

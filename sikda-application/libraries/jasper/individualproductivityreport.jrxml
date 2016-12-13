@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="year" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2011"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="emp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT k.*, k.qty01+k.qty02+k.qty03+k.qty04+k.qty05+k.qty06+k.qty07
+   +k.qty08+k.qty09+k.qty10+k.qty11+k.qty12 as total FROM (
+SELECT e.employee_id,e.employee_name,e.employee_shortName,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-01%')) as qty01,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-02%')) as qty02,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-03%')) as qty03,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-04%')) as qty04,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-05%')) as qty05,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-06%')) as qty06,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-07%')) as qty07,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-08%')) as qty08,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-09%')) as qty09,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-10%')) as qty10,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-11%')) as qty11,
+(SELECT count(t.tsr_id) as qty FROM sim_simdigi_tsr t where e.employee_id=t.employee_id
+and t.date	 LIKE concat($P{year},'-12%')) as qty12
+FROM sim_staff_employee e where e.employee_id in ($P{emp})
+) k]]>
+	</queryString>
+	<field name="employee_id" class="java.lang.Integer"/>
+	<field name="employee_name" class="java.lang.String"/>
+	<field name="employee_shortName" class="java.lang.String"/>
+	<field name="qty01" class="java.lang.Long"/>
+	<field name="qty02" class="java.lang.Long"/>
+	<field name="qty03" class="java.lang.Long"/>
+	<field name="qty04" class="java.lang.Long"/>
+	<field name="qty05" class="java.lang.Long"/>
+	<field name="qty06" class="java.lang.Long"/>
+	<field name="qty07" class="java.lang.Long"/>
+	<field name="qty08" class="java.lang.Long"/>
+	<field name="qty09" class="java.lang.Long"/>
+	<field name="qty10" class="java.lang.Long"/>
+	<field name="qty11" class="java.lang.Long"/>
+	<field name="qty12" class="java.lang.Long"/>
+	<field name="total" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="59" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="473" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[DEC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="368" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[SEP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-2" y="45" width="90" height="12"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isItalic="false" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[Employee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="403" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[OCT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="193" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[APR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="263" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[JUN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="88" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[JAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="438" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[NOV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="298" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[JUL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="123" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[FEB]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="158" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[MAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="333" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[AUG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="228" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[MAY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="506" y="45" width="35" height="12" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="8" isBold="true" isUnderline="true" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="62" y="1" width="74" height="20"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="8" isBold="false" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{companyno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="74" height="20"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="10" isBold="true" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{organization_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="11" width="536" height="20"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="Serif" size="14" isBold="true" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="29" width="555" height="20"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="Serif" size="8" isBold="false" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Year : "+$P{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="193" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty04}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="403" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty10}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="333" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty08}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="368" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty09}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="473" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty12}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty02}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="158" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty03}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="88" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty01}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty11}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty07}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="263" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty06}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="228" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty05}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="88" height="12"/>
+				<textElement>
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{employee_shortName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="508" y="0" width="35" height="12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="9" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="68" height="13"/>
+				<textElement>
+					<font size="8" pdfFontName="times"/>
+				</textElement>
+				<text><![CDATA[Printed Date: ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="53" y="1" width="100" height="13"/>
+				<textElement>
+					<font size="8" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="193" y="1" width="80" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="271" y="1" width="40" height="13"/>
+				<textElement>
+					<font size="8" pdfFontName="times"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="295" splitType="Stretch">
+			<lineChart>
+				<chart>
+					<reportElement x="0" y="0" width="555" height="295"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Right"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["JAN"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty01}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["MAR"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty03}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["APR"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty04}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["MAY"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty05}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["JUN"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty06}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["JUL"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty07}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["AUG"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty08}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["SEP"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty09}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["OCT"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty10}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["NOV"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty11}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{employee_shortName}]]></seriesExpression>
+						<categoryExpression><![CDATA["DEC"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{qty12}]]></valueExpression>
+						<labelExpression><![CDATA[$F{employee_shortName}]]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+				</linePlot>
+			</lineChart>
+		</band>
+	</summary>
+</jasperReport>

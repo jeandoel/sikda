@@ -1,0 +1,31 @@
+<script type="text/javascript" src="<?=base_url()?>assets/customjs/master_sarana_posyandu.js"></script>
+
+<div class="mycontent">
+<div id="dialogsarpos" style="color:red;font-size:.75em;display:none" title="Confirmation Required">
+  Hapus Data?
+</div>
+<div class="formtitle">Master Sarana Posyandu</div>
+	<form id="formsaranaposyandu">
+		<div class="gridtitle">Daftar Sarana Posyandu<span class="tambahdata" id="v_master_sarana_posyandu_add">Input Sarana Posyandu</span></div>
+		
+		<fieldset style="margin:0 13px 0 13px ">
+						<span>
+						<label>Tanggal (dd-mm-yyyy)</label>
+						<input type="text" name="dari" class="dari" id="darisaranaposyandu"/>
+						sampai
+						<input type="text" name="sampai" class="sampai" id="sampaisaranaposyandu"/>
+						</span>
+						<span>
+						<label>Nama Sarana Posyandu</label>
+						<input type="text" name="nama" class="nama" id="namasaranaposyandu"/>
+						<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carisaranaposyandu" />
+						<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetsaranaposyandu" />
+						</span>
+					</fieldset>
+		
+		<div class="paddinggrid">
+		<table id="listsaranaposyandu"></table>
+		<div id="pagersaranaposyandu"></div>
+		</div >
+	</form>
+</div>

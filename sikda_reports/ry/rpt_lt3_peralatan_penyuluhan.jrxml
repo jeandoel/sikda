@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_lt3_peralatan_penyuluhan" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="213"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2,
+$P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'LEVEL_NAME' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT P.PROVINSI FROM sys_setting S INNER JOIN mst_provinsi  P
+ON S.KEY_VALUE=P.KD_PROVINSI WHERE
+S.KEY_DATA = 'PROVINSI' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS PROVINSI,
+(SELECT P.KABUPATEN FROM sys_setting S INNER JOIN mst_kabupaten  P
+ON S.KEY_VALUE=P.KD_KABUPATEN WHERE
+S.KEY_DATA = 'KABUPATENKOTA' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KABKOTA,
+(SELECT P.KECAMATAN FROM sys_setting S INNER JOIN mst_kecamatan  P
+ON S.KEY_VALUE=P.KD_KECAMATAN WHERE
+S.KEY_DATA = 'KECAMATAN' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KECAMATAN,
+ '' AS 'PUSTU_YG_ADA',
+ '' AS 'YANG_LAPOR',
+ '' AS 'TAHUN',
+ '' AS 'NAMA_MENGETAHUI',
+ '' AS 'NIP_MENGETAHUI',
+ '' AS 'LOKASI',
+ '' AS 'TANGGAL',
+ '' AS 'NAMA_PELAPOR',
+ '' AS 'NIP_PELAPOR', X.*
+FROM (
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-1' AS 'NO', 'BULLETIN BOARD' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  1 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-2' AS 'NO', 'FANTOM GIGI ANAK' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-3' AS 'NO', 'FANTOM GIGI DEWASA' AS 'URAIAN',0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-4' AS 'NO', 'FANTOM MATA UKURAN ASLI' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-5' AS 'NO', 'FANTIM MATA UKURAN BESAR (FIBERGLASS)' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-6' AS 'NO', 'FANTOM PANGGUL WANITA' AS 'URAIAN',0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-7' AS 'NO', 'FLIP CHART (STANDART)' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null' AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-8' AS 'NO', 'GAMBAR ANATOM GIGI' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null' AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-9' AS 'NO', 'GAMBAR ANAYOMI MATA 60 93 cm' AS 'URAIAN',0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-10' AS 'NO', 'GAMBAR PANGGUL LAKI-LAKI' AS 'URAIAN',0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-11' AS 'NO', 'GAMBAR REFRAKSI MATA' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-12' AS 'NO', ' KABEL TAMBAHAN,@ 20 METER' AS 'URAIAN',0 AS 'NO GAMBAR', 'null' AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-13' AS 'NO', 'LAYAR UKURAN 1 1.5 METER' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null' AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-14' AS 'NO', 'LEMARI ALAT-ALAT AUDIOVISUAL' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-15' AS 'NO', 'PAPAN TULIS PUTIH' AS 'URAIAN',0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-16' AS 'NO', 'PROYEKTOR' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-17' AS 'NO', 'RADIO KASET' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null 'AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-18' AS 'NO', 'FLANNEL BOARD' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null' AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+UNION ALL
+SELECT 1 AS 'GROUP', 'DATA  PERALATAN PENYULUHAN' AS 'NAMA_GROUP', 'P-19' AS 'NO', 'WIRELESS SYSTEM' AS 'URAIAN', 0 AS 'NO GAMBAR', 'null' AS 'JML ALAT', 0 AS Puspem1, 0 AS Puspem2, 0 AS Puspem3, 0 AS Puspem4, 0 AS Puspem5, 0 AS Puspem6, 0 AS Puspem7, 0 AS Puspem8, 0 AS Puspem9, 0 AS Puspem10, 0 AS 'JML ALAT PUSTU', 0 AS 'TOTAL ALAT', 0 AS 'KEB DASAR', 0 AS PERMINTAAN, 0 AS PENERIMAAN,  2 AS iRow
+) X]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="KABKOTA" class="java.lang.String"/>
+	<field name="KECAMATAN" class="java.lang.String"/>
+	<field name="PUSTU_YG_ADA" class="java.lang.String"/>
+	<field name="YANG_LAPOR" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="NAMA_MENGETAHUI" class="java.lang.String"/>
+	<field name="NIP_MENGETAHUI" class="java.lang.String"/>
+	<field name="LOKASI" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="NAMA_PELAPOR" class="java.lang.String"/>
+	<field name="NIP_PELAPOR" class="java.lang.String"/>
+	<field name="GROUP" class="java.lang.Long"/>
+	<field name="NAMA_GROUP" class="java.lang.String"/>
+	<field name="NO" class="java.lang.String"/>
+	<field name="URAIAN" class="java.lang.String"/>
+	<field name="NO GAMBAR" class="java.lang.Long"/>
+	<field name="JML ALAT" class="java.lang.String"/>
+	<field name="Puspem1" class="java.lang.Long"/>
+	<field name="Puspem2" class="java.lang.Long"/>
+	<field name="Puspem3" class="java.lang.Long"/>
+	<field name="Puspem4" class="java.lang.Long"/>
+	<field name="Puspem5" class="java.lang.Long"/>
+	<field name="Puspem6" class="java.lang.Long"/>
+	<field name="Puspem7" class="java.lang.Long"/>
+	<field name="Puspem8" class="java.lang.Long"/>
+	<field name="Puspem9" class="java.lang.Long"/>
+	<field name="Puspem10" class="java.lang.Long"/>
+	<field name="JML ALAT PUSTU" class="java.lang.Long"/>
+	<field name="TOTAL ALAT" class="java.lang.Long"/>
+	<field name="KEB DASAR" class="java.lang.Long"/>
+	<field name="PERMINTAAN" class="java.lang.Long"/>
+	<field name="PENERIMAAN" class="java.lang.Long"/>
+	<field name="iRow" class="java.lang.Long"/>
+	<group name="pkm">
+		<groupExpression><![CDATA[$F{KD_PUSKESMAS}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="32"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="190">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN TAHUNAN (LT3)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="802" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DATA  PERALATAN PENYULUHAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="50" width="100" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kode Puskesmas :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="64" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="77" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kecamatan :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="90" width="100" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pustu yang ada :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="104" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kabupaten/Kota :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="117" width="100" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Propinsi :
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="114" y="90" width="100" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PUSTU_YG_ADA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="117" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROVINSI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="104" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KABKOTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="50" width="100" height="14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="64" width="151" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="77" width="100" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KECAMATAN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="573" y="78" width="93" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Yang Lapor :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="573" y="91" width="94" height="13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Bulan : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="573" y="104" width="94" height="13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Tahun : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="156" width="20" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="155" width="170" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nama Alat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="155" width="53" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[No Gambar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="257" y="144" width="52" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Jml Alat di]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="353" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="164" width="73" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Gdg Puskesmas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="542" y="144" width="39" height="17"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Jml Alat ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="584" y="142" width="24" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="773" y="137" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="350" y="164" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement x="329" y="138" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="256" y="137" width="1" height="53"/>
+			</line>
+			<line>
+				<reportElement x="201" y="137" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="2" y="137" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="24" y="137" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="2" y="137" width="771" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="332" y="138" width="206" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Puskesmas Pembantu]]></text>
+			</staticText>
+			<line>
+				<reportElement x="540" y="137" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="583" y="137" width="1" height="52"/>
+			</line>
+			<staticText>
+				<reportElement x="584" y="156" width="24" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Alat]]></text>
+			</staticText>
+			<line>
+				<reportElement x="371" y="164" width="1" height="25"/>
+			</line>
+			<staticText>
+				<reportElement x="332" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[4]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[6]]></text>
+			</staticText>
+			<line>
+				<reportElement x="392" y="164" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement x="413" y="165" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="434" y="165" width="1" height="24"/>
+			</line>
+			<staticText>
+				<reportElement x="458" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[7]]></text>
+			</staticText>
+			<line>
+				<reportElement x="497" y="164" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement x="476" y="164" width="1" height="25"/>
+			</line>
+			<staticText>
+				<reportElement x="500" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[9]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="521" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[10]]></text>
+			</staticText>
+			<line>
+				<reportElement x="455" y="164" width="1" height="26"/>
+			</line>
+			<staticText>
+				<reportElement x="479" y="165" width="17" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[8]]></text>
+			</staticText>
+			<line>
+				<reportElement x="518" y="165" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="329" y="164" width="211" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="542" y="161" width="38" height="17"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Di Pustu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="584" y="170" width="24" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[4x6]]></text>
+			</staticText>
+			<line>
+				<reportElement x="609" y="137" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="719" y="138" width="1" height="52"/>
+			</line>
+			<line>
+				<reportElement x="666" y="138" width="1" height="52"/>
+			</line>
+			<staticText>
+				<reportElement x="611" y="144" width="46" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kebutuhan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="611" y="161" width="45" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Dasar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="669" y="153" width="45" height="17"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Permintaan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="725" y="153" width="45" height="17"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Penerimaan]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField pattern="###0">
+				<reportElement x="4" y="17" width="20" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="17" width="51" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{NO GAMBAR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="17" width="71" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{JML ALAT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="332" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="353" y="17" width="18" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="395" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="498" y="17" width="19" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem9}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="521" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem10}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="584" y="17" width="24" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TOTAL ALAT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="28" y="17" width="170" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{URAIAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="458" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem7}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem8}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="374" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="437" y="17" width="17" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Puspem6}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="542" y="17" width="38" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{JML ALAT PUSTU}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="611" y="17" width="46" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{KEB DASAR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="669" y="17" width="45" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{PERMINTAAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="725" y="17" width="45" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{PENERIMAAN}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="3" y="0" width="771" height="1"/>
+			</line>
+			<line>
+				<reportElement x="2" y="36" width="771" height="1"/>
+			</line>
+			<line>
+				<reportElement x="2" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="24" y="0" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="201" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="256" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="329" y="0" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="350" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="371" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="392" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="413" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="434" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="455" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="476" y="1" width="1" height="35"/>
+			</line>
+			<line>
+				<reportElement x="497" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="518" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="540" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="583" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="609" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="666" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="719" y="1" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="773" y="1" width="1" height="36"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="24" width="100" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Mengetahui/Menyetujui :
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="87" width="24" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NIP.
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="86" width="100" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="579" y="86" width="29" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NIP.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="582" y="24" width="100" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pelapor :
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="582" y="85" width="100" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="582" y="4" width="100" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Lokasi, dd/mm/yyyy
+]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

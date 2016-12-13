@@ -1,0 +1,216 @@
+@charset "utf-8";
+/* CSS Document */
+
+body 
+{
+	background-color:#003399;
+	height:100%;
+}
+
+.wrapperlogin
+{
+	background-position:center;
+}
+
+.headerlogin
+{
+	
+	height:159px; 
+	background-repeat:no-repeat;
+	width:568px;
+	margin-left:135px;
+	background-image:url(../images/logo.png);
+}
+
+#containerlogin
+{
+	width:350px;
+}
+
+#tabbox
+{
+	height:40px;
+}
+
+#panel
+{
+	background-color:#FFF;
+	height:200px;
+	-moz-border-radius-bottomright: 50px;
+	border-bottom-right-radius: 50px;
+	-moz-border-radius-topleft: 50px;
+	border-top-left-radius: 50px;
+}
+
+.tab
+{
+	background: #999999;
+	display: block;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	width: 80px;
+	float: right;
+	font-weight: bold;
+	-webkit-border-top-left-radius: 2em;
+	-webkit-border-top-right-radius: 2em;
+	-moz-border-radius: 2em 2em 0px 0px;
+}
+
+.signup
+{
+	margin-left:8px;
+	-moz-border-radius-topright: 20px;
+	border-top-right-radius: 20px;
+	-moz-border-radius-topleft: 20px;
+	border-top-left-radius: 20px;
+	font-family:Tahoma;
+	font-size:11px;
+}
+
+#login
+{
+	margin-left:8px;
+	-moz-border-radius-topright: 20px;
+	border-top-right-radius: 20px;
+	-moz-border-radius-topleft: 20px;
+	border-top-left-radius: 20px;
+	font-family:Tahoma;
+	font-size:11px;
+}
+
+.select
+{
+	background-color:#FFF;
+	-moz-border-radius-topright: 20px;
+	border-top-right-radius: 20px;
+	-moz-border-radius-topleft: 20px;
+	border-top-left-radius: 20px;
+}
+
+#loginbox
+{
+	height:200px;
+	padding:5px;
+}
+
+#signupbox
+{
+	height:200px;
+	padding:5px;
+	display:none;
+}
+
+h1
+{
+	font-family:tahoma;
+	font-size:16px;
+	color:#FF9900;
+	font-weight:bold;
+}
+
+h2
+{
+	font-family:tahoma;
+	font-size:11px;
+	color:#FFFF00;
+	line-height:10px;
+	padding-left:5px;
+}
+
+h3
+{
+	font-style:italic;
+	margin-top:0px;
+	margin-left:20px;
+	line-height:10px;
+	color:#FFFFFF;
+}
+
+h4
+{
+	margin-left:10px;
+}
+
+.judul
+{
+	font-family:arial;
+	font-size:16px;
+	text-align:justify;
+	color:#666666;
+	line-height:20px;
+	font-weight:bold;
+	border-bottom:dotted medium #CCCCCC ;
+	width:100%;
+}
+
+a
+{
+	color: #000;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+}
+
+p
+{
+	font-family:arial;
+	font-size:12px;
+	text-align:justify;
+	color:#666666;
+	line-height:20px;
+}
+
+label
+{
+	font-family:tahoma;
+	font-size:12px;
+}
+
+<!--untuk tabel login-->
+
+div#form-login form label 
+{ 
+	float:left; width:120px;
+}
+
+div#form-login form .txt { padding:3px;margin:3px; background-color:#CCCCCC;}
+div#form-login h1 { font:20px "Trebuchet MS"; border-bottom:1px dotted #009900;padding:5px;margin:10px;}
+div#form-signup form label { float:left; width:120px;}
+div#form-signup form .txt { padding:3px;margin:3px; background-color:#CCCCCC;}
+div#form-signup h1 { font:20px "Trebuchet MS"; border-bottom:1px dotted #009900;padding:5px;margin:10px;}
+div#tombol { clear:both;padding:10px; padding-left:60px;  }
+#button{ padding:3px 10px; background-image:url(../images/menu.jpg); background-repeat:repeat-x; color:#0000FF; font-family:verdana; font-size:11px; font-weight:bold; }
+#button:hover,.button:focus
+{
+	color: #000; -webkit-box-shadow: rgba(0,0,0,0.25) 1px 1px 3px; 
+	-moz-box-shadow: rgba(0,0,0,0.25) 1px 1px 3px;
+	box-shadow: rgba(0,0,0,0.25) 1px 1px 3px; 
+	color:#666666;
+}
+
+.clear{
+	clear: both;	
+}
+
+<!-- untuk footer -->
+.line
+{
+	background-image:url(../images/line.jpg);
+	background-repeat:repeat-x;
+	height:4px;
+	padding-bottom:2px;
+}
+
+.footer1
+{
+	padding-top:20px;
+	font-family:tahoma;
+	font-size:12px;
+	color:#FFFF00;
+	line-height:10px;
+	font-weight:bold;
+}
+
+
+

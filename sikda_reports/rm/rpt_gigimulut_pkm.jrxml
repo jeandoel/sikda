@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_gigimulut" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2,
+$P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'LEVEL_NAME' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'KEPALA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+(SELECT P.PROVINSI FROM sys_setting S INNER JOIN mst_provinsi  P
+ON S.KEY_VALUE=P.KD_PROVINSI WHERE
+S.KEY_DATA = 'PROVINSI' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS PROVINSI,
+(SELECT P.KABUPATEN FROM sys_setting S INNER JOIN mst_kabupaten  P
+ON S.KEY_VALUE=P.KD_KABUPATEN WHERE
+S.KEY_DATA = 'KABUPATENKOTA' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KABKOTA,
+(SELECT P.KECAMATAN FROM sys_setting S INNER JOIN mst_kecamatan  P
+ON S.KEY_VALUE=P.KD_KECAMATAN WHERE
+S.KEY_DATA = 'KECAMATAN' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KECAMATAN,
+ '' AS 'PUSTU_YG_ADA',
+ '' AS 'YANG_LAPOR',
+ 'DARI PARAMETER PHP' AS 'TAHUN',
+ '' AS 'NAMA_MENGETAHUI',
+ '' AS 'NIP_MENGETAHUI',
+ '' AS 'LOKASI',
+ 'TANGGAL HARI INI' AS 'TANGGAL',
+ '' AS 'NAMA_PELAPOR',
+ '' AS 'NIP_PELAPOR', X.*
+FROM (
+select  'DATA JUMLAH KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'A' as 'KELOMPOK', 'Jumlah Kunjungan Baru/Pasien Baru' as kegiatan, '' as Jumlah, 1 as iRow
+UNION ALL
+select  'DATA JUMLAH KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'A' as 'KELOMPOK', 'Jumlah Kunjungan Lama/Pasien Lama' as kegiatan, '' as Jumlah, 2 as iRow
+UNION ALL
+select  'DATA JUMLAH KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'A' as 'KELOMPOK', 'Jumlah Kasus Baru' as kegiatan, '' as Jumlah, 3 as iRow
+UNION ALL
+select  'DATA JUMLAH KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'A' as 'KELOMPOK', 'Jumlah Kasus Lama' as kegiatan, '' as Jumlah, 4 as iRow
+UNION ALL
+select  'DATA JUMLAH KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'A' as 'KELOMPOK', 'Jumlah Kunjungan Kasus' as kegiatan, '' as Jumlah, 5 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Anak Usia < 4 tahun (B+L)' as kegiatan, '' as Jumlah, 6 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Anak Prasekolah (B+L)' as kegiatan, '' as Jumlah, 7 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Anak SD/MI (B+L)' as kegiatan, '' as Jumlah, 8 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Bumil (B+L)' as kegiatan, '' as Jumlah, 9 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Usila (B+L)' as kegiatan, '' as Jumlah, 10 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Bufas/Buteki' as kegiatan, '' as Jumlah, 11 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Golongan Lain (B+L)' as kegiatan, '' as Jumlah, 12 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Peserta Askes PNS' as kegiatan, '' as Jumlah, 13 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Peserta Jamkesmas' as kegiatan, '' as Jumlah, 14 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Peserta Jamkesda' as kegiatan, '' as Jumlah, 15 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Umum' as kegiatan, '' as Jumlah, 16 as iRow
+UNION ALL
+select  'DATA JENIS KUNJUNGAN RAWAT JALAN GIGI' as 'JUDUL',  'B' as 'KELOMPOK', 'Jumlah Kunjungan Seluruhnya' as kegiatan, '' as Jumlah, 17 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Karies Gigi (K02)' as kegiatan, '' as Jumlah, 18 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Kelainan Pulpa dan Jaringan Periapikal (K04)' as kegiatan, '' as Jumlah, 19 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Gingivitis dan Penyakit Peridontal (K05)' as kegiatan, '' as Jumlah, 20 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Gangguan perkembangan dan erupsi gigi, gigi terbenam dan gigi impaksi (K00, K01.1, K01.2)' as kegiatan, '' as Jumlah, 21 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Penyakit Jaringan Keras Gigi Lainnya (K03)' as kegiatan, '' as Jumlah, 22 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Kelainan gusi & bubungan alveolar tak bergigi (K06)' as kegiatan, '' as Jumlah, 23 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Kelainan dentofasial termasuk maloklusi (K07)' as kegiatan, '' as Jumlah, 24 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Kelainan gigi dan jaringan pendukung lainnya (K08)' as kegiatan, '' as Jumlah, 25 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Penyakit rongga mulut, kelenjar ludah, rahang dan lainnya (K09, K10, K11, K12, K13, K14)' as kegiatan, '' as Jumlah, 26 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Lesi rongga mulut lainnya yang diduga merupakan:' as kegiatan, '' as Jumlah, 27 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'a. Neoplasma ganas bibir, rongga mulut dan faring' as kegiatan, '' as Jumlah, 28 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'b. Manifestasi HIV AIDS/penyakit menular seksual ' as kegiatan, '' as Jumlah, 29 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Fraktur Akar Gigi (Vertikal/Horizontal)' as kegiatan, '' as Jumlah, 30 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'Kalkulus (subgingiva/supragingiva)' as kegiatan, '' as Jumlah, 31 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'a. Supragingiva' as kegiatan, '' as Jumlah, 32 as iRow
+UNION ALL
+select  'DATA MORBIDITAS PENYAKIT GIGI-MULUT (Sesuai ICD DA X)' as 'JUDUL',  'C' as 'KELOMPOK', 'b. Subgingiva' as kegiatan, '' as Jumlah, 33 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'Konsultasi dan Pemeriksaan' as kegiatan, '' as Jumlah, 34 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'Perawatan Kelainan Pulpa' as kegiatan, '' as Jumlah, 35 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'a. Pengobatan' as kegiatan, '' as Jumlah, 36 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'b. Penambalan Sementara' as kegiatan, '' as Jumlah, 37 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     - Aplikasi Eugenol' as kegiatan, '' as Jumlah, 38 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', '     - Pulp Capping' as kegiatan, '' as Jumlah, 39 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     - Devitalisasi' as kegiatan, '' as Jumlah, 40 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'c. Penambalan Tetap' as kegiatan, '' as Jumlah, 41 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     - Tumpatan  Amalgam Gigi Sulung' as kegiatan, '' as Jumlah, 42 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     - Tumpatan Amalgam Gigi Tetap' as kegiatan, '' as Jumlah, 43 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     - Tumpatan Glass Ionomer Cement  Gigi Sulung' as kegiatan, '' as Jumlah, 44 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', '     - Tumpatan Glass Ionomer Cement  Gigi Tetap' as kegiatan, '' as Jumlah, 45 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', '     -  ART Gigi Sulung' as kegiatan, '' as Jumlah, 46 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', '     -  ART Gigi Tetap' as kegiatan, '' as Jumlah, 47 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'd. Perawatan Saluran Akar' as kegiatan, '' as Jumlah, 48 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', '     -   Pulpektomi' as kegiatan, '' as Jumlah, 49 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', '     -   Perawatan Gangren' as kegiatan, '' as Jumlah, 49 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'Perawatan Gingivitis dan Penyakit Periodontal ' as kegiatan, '' as Jumlah, 50 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     -   Scalling supragingiva & subgingiva' as kegiatan, '' as Jumlah, 51 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     -   Curetase' as kegiatan, '' as Jumlah, 52 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'Pencabutan Gigi' as kegiatan, '' as Jumlah, 53 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'a. Tanpa Penyulit' as kegiatan, '' as Jumlah, 54 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', '     -   Gigi sulung dengan topikal anestesi' as kegiatan, '' as Jumlah, 55 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     -   Gigi  tetap dengan  topikal anestesi' as kegiatan, '' as Jumlah, 56 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     -   Gigi tetap dengan injeksi anestesi' as kegiatan, '' as Jumlah, 57 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  'b. Dengan Penyulit' as kegiatan, '' as Jumlah, 58 as iRow
+UNION ALL
+select   'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     -  Gigi sulung dengan injeksi anastesi' as kegiatan, '' as Jumlah, 59 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK',  '     -  Gigi tetap dengan injeksi anestesi' as kegiatan, '' as Jumlah, 60 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'c. Odontektomi' as kegiatan, '' as Jumlah, 61 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'Penanganan Abses ' as kegiatan, '' as Jumlah, 62 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'a. Pengobatan disertai pembukaan kamar pulpa' as kegiatan, '' as Jumlah, 63 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'b. Insisi Abses' as kegiatan, '' as Jumlah, 64 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'Pelayanan Rujukan' as kegiatan, '' as Jumlah, 65 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'a. Menerima' as kegiatan, '' as Jumlah, 66 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'b. Mengirim' as kegiatan, '' as Jumlah, 67 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'Pelayanan Kesehatan Gigi-Mulut Khusus' as kegiatan, '' as Jumlah, 68 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'a. Topikal Aplikasi' as kegiatan, '' as Jumlah, 69 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'b.  Fluoridasi' as kegiatan, '' as Jumlah, 70 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'c.  Fissure Sealant' as kegiatan, '' as Jumlah, 71 as iRow
+UNION ALL
+select  'DATA   JENISA PELAYANAN  KESEHATAN GIGI DAN MULUT' as 'JUDUL',  'D' as 'KELOMPOK', 'd.  Pembuatan Protesa Gigi Lepasan' as kegiatan, '' as Jumlah, 72 as iRow
+)X]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="KABKOTA" class="java.lang.String"/>
+	<field name="KECAMATAN" class="java.lang.String"/>
+	<field name="PUSTU_YG_ADA" class="java.lang.String"/>
+	<field name="YANG_LAPOR" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="NAMA_MENGETAHUI" class="java.lang.String"/>
+	<field name="NIP_MENGETAHUI" class="java.lang.String"/>
+	<field name="LOKASI" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="NAMA_PELAPOR" class="java.lang.String"/>
+	<field name="NIP_PELAPOR" class="java.lang.String"/>
+	<field name="JUDUL" class="java.lang.String"/>
+	<field name="KELOMPOK" class="java.lang.String"/>
+	<field name="kegiatan" class="java.lang.String"/>
+	<field name="Jumlah" class="java.lang.String"/>
+	<field name="iRow" class="java.lang.Long"/>
+	<group name="kelompok">
+		<groupExpression><![CDATA[$F{KELOMPOK}]]></groupExpression>
+		<groupHeader>
+			<band height="19">
+				<textField>
+					<reportElement x="12" y="0" width="30" height="16"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{KELOMPOK}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="42" y="0" width="195" height="16"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{JUDUL}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="237" y="0" width="7" height="15"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="0" width="466" height="1"/>
+				</line>
+				<line>
+					<reportElement x="244" y="0" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="268" y="1" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="293" y="1" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="466" y="1" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="434" y="1" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="404" y="1" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="373" y="1" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="343" y="1" width="1" height="18"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="1" height="19"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="166" splitType="Stretch">
+			<staticText>
+				<reportElement x="14" y="78" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="57" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="112" y="57" width="82" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="174" y="77" width="22" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="203" y="57" width="210" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="27"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Laporan Pelayanan Kesehatan Gigi Dan Mulut Puskesmas]]></text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="201" y="77" width="56" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="112" y="77" width="56" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="8" y="146" width="35" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="43" y="106" width="194" height="60"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Variabel Kegiatan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="237" y="146" width="8" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="106" width="222" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Variabel Sasaran]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="251" y="126" width="43" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pasien]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="294" y="125" width="50" height="40"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="245" y="146" width="24" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="269" y="146" width="25" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="146" width="28" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="344" y="126" width="61" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Penyakit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="344" y="146" width="27" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[JML]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="146" width="27" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[JML]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="146" width="28" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="126" width="61" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tindakan]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="105" width="466" height="1"/>
+			</line>
+			<line>
+				<reportElement x="245" y="125" width="221" height="1"/>
+			</line>
+			<line>
+				<reportElement x="344" y="146" width="122" height="1"/>
+			</line>
+			<line>
+				<reportElement x="245" y="145" width="49" height="1"/>
+			</line>
+			<line>
+				<reportElement x="466" y="106" width="1" height="60"/>
+			</line>
+			<line>
+				<reportElement x="244" y="105" width="1" height="60"/>
+			</line>
+			<line>
+				<reportElement x="293" y="125" width="1" height="40"/>
+			</line>
+			<line>
+				<reportElement x="343" y="125" width="1" height="40"/>
+			</line>
+			<line>
+				<reportElement x="404" y="125" width="1" height="40"/>
+			</line>
+			<line>
+				<reportElement x="434" y="146" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="373" y="146" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="268" y="147" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="0" y="106" width="1" height="60"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="45" y="5" width="199" height="15"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kegiatan}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="466" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="466" height="1"/>
+			</line>
+			<line>
+				<reportElement x="244" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="268" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="293" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="343" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="373" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="404" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="434" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="466" y="1" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="1" height="18"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="186" splitType="Stretch">
+			<staticText>
+				<reportElement x="5" y="156" width="176" height="20"/>
+				<textElement/>
+				<text><![CDATA[Laporan Kesehatan Gigi dan Mulut]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="142" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="237" y="156" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="455" y="156" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="317" y="156" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="12" y="41" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskesmas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="14" y="96" width="176" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,34 @@
+<script>
+	$('#backlistmasterkelurahan').click(function(){
+		$("#t19","#tabs").empty();
+		$("#t19","#tabs").load('c_master_kelurahan'+'?_=' + (new Date()).getTime());
+	})
+</script>
+
+<div class="mycontent">
+<div class="formtitle">Detail Master Registrasi Tempat</div>
+<div class="backbutton"><span class="kembali" id="backlistmasterkelurahan">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" method="post" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>Kode Kelurahan</label>
+		<input type="text" name="kode_kelurahan" id="kode_kelurahan" value="<?=$data->KD_KELURAHAN?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Kecamatan</label>
+		<input type="text" name="kode_kecamatan" id="kode_kecamatan" value="<?=$data->KD_KECAMATAN?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Kelurahan</label>
+		<input type="text" name="kelurahan" id="kelurahan" value="<?=$data->KELURAHAN?>"  />
+		</span>
+	</fieldset>
+</form>
+</div >

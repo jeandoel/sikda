@@ -1,0 +1,125 @@
+<script>
+$(document).ready(function(){
+		$('#form1inspekhoteledit').ajaxForm({
+			beforeSend: function() {
+				achtungShowLoader();	
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			},
+			complete: function(xhr) {
+				achtungHideLoader();
+				if(xhr.responseText!=='OK'){
+					$.achtung({message: xhr.responseText, timeout:5});
+				}else{
+					$.achtung({message: 'Proses Ubah Data Berhasil', timeout:5});
+					$("#t464","#tabs").empty();
+					$("#t464","#tabs").load('t_k_inspeksi_hotel'+'?_=' + (new Date()).getTime());
+				}
+			}
+		});
+})
+$("#tanggalinspeksihotel").mask("99/99/9999");
+</script>
+<script>
+	$('#backlistinspekhotel').click(function(){
+		$("#t464","#tabs").empty();
+		$("#t464","#tabs").load('t_k_inspeksi_hotel'+'?_=' + (new Date()).getTime());
+	})
+	//$('#tglkejadianeditprop').datepicker({dateFormat: "dd-mm-yy",changeYear: true});
+</script>
+<div class="mycontent">
+<div class="formtitle">Edit Data Inspeksi Inspeksi Hotel</div>
+<div class="backbutton"><span class="kembali" id="backlistinspekhotel">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" id="form1inspekhoteledit" method="post" action="<?=site_url('t_k_inspeksi_hotel/editprocess')?>" enctype="multipart/form-data">	
+	<fieldset>
+		<span>
+		<label>Propinsi</label>
+		<input type="text"  name="" id="textid" value="<?=$data->PROVINSI?>" disabled />
+		<input type="hidden" name="ID" value="<?=$data->ID?>" />
+		<input type="hidden" name="fileold" value="<?=$data->DOKUMEN_PEMERIKSAAN?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kabupaten</label>
+		<input type="text"  name="" id="textid" value="<?=$data->KABUPATEN?>" disabled />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kecamatan</label>
+		<input type="text"  name="" id="textid" value="<?=$data->KECAMATAN?>" disabled />
+		</span>
+	</fieldset>
+	<?=getComboKelurahanByKec($data->KD_KELURAHAN,'desa_kelurahan','','required','')?>
+	<fieldset>
+		<span>
+		<label>Nama Hotel*</label>
+		<input type="text" name="nama_hotel" value="<?=$data->NAMA_HOTEL?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Alamat*</label>
+		<input type="text" name="alamat" value="<?=$data->ALAMAT?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>No. Telepon*</label>
+		<input type="text" name="telp" value="<?=$data->TELP?>" required />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Jumlah Karyawan*</label>
+		<input type="text" name="jumlah_karyawan" value="<?=$data->JUMLAH_KARYAWAN?>" required />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>No. Izin Usaha</label>
+		<input type="text" name="no_ijin" value="<?=$data->NO_IZIN_USAHA?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Penanggung Jawab</label>
+		<input type="text" name="pic" value="<?=$data->PIC?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Pemeriksa*</label>
+		<input type="text" name="pemeriksa" value="<?=$data->PEMERIKSA?>" required />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Total Nilai Pemeriksaan*</label>
+		<input type="text" name="total_nilai" value="<?=$data->TOTAL_NILAI?>" required />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>Tanggal Inspeksi* (dd/mm/yyyy)</label>
+		<input type="text" name="tanggal_inspeksi"  value="<?=$data->TANGGAL?>" id="tanggalinspeksihotel" class="mydate" required  />		
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Dokumen Pemeriksaan*</label>
+		<input type="file" name="filedok" /> File:
+		<a href="<?=base_url()?>tmp/inspeksihotel/<?=$data->DOKUMEN_PEMERIKSAAN?>" style="color:blue"><?=$data->DOKUMEN_PEMERIKSAAN?></a>
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<input type="submit" name="bt1" value="Proses Data"/>
+		</span>
+	</fieldset>
+</form>
+</div >

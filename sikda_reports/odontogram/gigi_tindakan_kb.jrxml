@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gigi" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="f310443c-dcaf-4f0d-a969-c3ec27d7ad65">
+	<property name="ireport.zoom" value="1.2078825000000046"/>
+	<property name="ireport.x" value="146"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="date1" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date2" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="parameter1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Programming\\iReports\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  COUNT(pt.KD_TINDAKAN) as JUMLAH,
+  mst_produk.KD_PRODUK AS KD_PRODUK,
+  mst_produk.PRODUK AS PRODUK,
+  DATE_FORMAT($P{date1},'%d-%m-%Y') AS dt1,
+  DATE_FORMAT($P{date2},'%d-%m-%Y') AS dt2,
+  (
+      SELECT KABUPATEN
+      FROM mst_kabupaten
+      WHERE
+      KD_KABUPATEN=$P{parameter1} LIMIT 1
+  ) AS NAMA_KABUPATEN,
+  (
+      SELECT COUNT(DISTINCT pt.KD_PASIEN)
+      FROM pel_tindakan pt
+      join mst_produk mp on pt.KD_TINDAKAN = mp.KD_PRODUK
+      where SUBSTRING(pt.KD_PUSKESMAS,2,4) = $P{parameter1}
+      AND (pt.TANGGAL BETWEEN $P{date1} AND $P{date2})
+      AND mp.IS_ODONTOGRAM = 1
+  ) AS JUMLAH_PASIEN
+from pel_tindakan pt
+join mst_produk on pt.KD_TINDAKAN = mst_produk.KD_PRODUK
+where SUBSTRING(pt.KD_PUSKESMAS,2,4) = $P{parameter1}
+AND mst_produk.IS_ODONTOGRAM = 1
+AND (pt.TANGGAL BETWEEN $P{date1} AND $P{date2})
+group by mst_produk.KD_PRODUK
+ORDER BY `pt`.`KD_TINDAKAN` ASC]]>
+	</queryString>
+	<field name="JUMLAH" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="KD_PRODUK" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PRODUK" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dt1" class="java.lang.String"/>
+	<field name="dt2" class="java.lang.String"/>
+	<field name="NAMA_KABUPATEN" class="java.lang.String"/>
+	<field name="JUMLAH_PASIEN" class="java.lang.Long"/>
+	<variable name="SUM_STATUS" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{JUMLAH}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="159">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="50" uuid="c3f4aa35-eb25-4670-bb5d-83bf3aab6cad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[LAPORAN TINDAKAN ODONTOGRAM]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="144" y="75" width="119" height="20" uuid="90ab46c3-6a21-4ec8-8e8b-d2bd029274c6"/>
+				<textFieldExpression><![CDATA[$P{parameter1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="263" y="75" width="130" height="20" uuid="28f237dc-3bf1-41bd-8a11-45b1bcca447e"/>
+				<textFieldExpression><![CDATA[$F{NAMA_KABUPATEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="144" y="95" width="80" height="20" uuid="0f8936be-9332-432e-874f-51c6664ba687"/>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="95" width="77" height="20" uuid="0f00e7df-8938-46eb-942a-2a69a1099c3c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="95" width="134" height="20" uuid="4eca8f3e-7548-45ca-a296-1660fcf9c14c"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERIODE :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="75" width="134" height="20" uuid="80e9f93b-95cd-4adc-99bb-9e59a9c38283"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PUSKESMAS :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="224" y="95" width="32" height="20" uuid="4220aa60-3886-4a42-a45e-bcf61a72f4bd"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="139" width="56" height="20" uuid="6861ad7e-40e1-4861-af3e-09997c746e38"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="139" width="123" height="20" uuid="6f2fa4b3-ac45-4168-aebb-c5ec18293250"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="139" width="540" height="20" uuid="10547b4c-6899-4cce-aa95-f0033757f78c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TINDAKAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="720" y="139" width="82" height="20" uuid="98eaab24-d300-4ad4-a82f-21972b6150eb"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUMLAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="393" y="95" width="134" height="20" uuid="b243921d-e730-4c1d-8e56-c58eec6f8e02"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUMLAH PASIEN:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="527" y="95" width="80" height="20" uuid="350458d6-c7bc-4730-9ce5-fb2183228e18"/>
+				<textFieldExpression><![CDATA[$F{JUMLAH_PASIEN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement mode="Transparent" x="720" y="20" width="82" height="20" uuid="5be4372e-5945-43d3-99f4-b260e3d8b72f"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SUM_STATUS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="1" y="20" width="719" height="20" uuid="2c3938ed-3de9-4717-943c-5b85bdcc35b5"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="720" y="0" width="82" height="20" uuid="8a62cdf6-603f-4d57-8b62-6f60ad3ad3c4"/>
+			</rectangle>
+			<textField>
+				<reportElement mode="Opaque" x="720" y="0" width="82" height="20" uuid="5548d1cb-b4d1-4455-8785-9de04ba53b3a"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JUMLAH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="57" y="0" width="123" height="20" uuid="101beaf8-f4e7-4c5b-9f6d-f3b1cd86cb5a"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_PRODUK}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1" y="0" width="56" height="20" uuid="345ea713-1a96-4acc-a727-ebfc350cf946"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="180" y="0" width="540" height="20" backcolor="#FFFFFF" uuid="1c5d4d18-164c-42c7-b27a-2c928a9882b5"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRODUK}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="72">
+			<textField>
+				<reportElement x="333" y="52" width="80" height="20" uuid="ecb15834-0c4e-469f-b8e6-f90d69c2fa34"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="702" y="52" width="100" height="20" uuid="c7235ef2-cf14-4f5f-828f-931ca91cd162"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="413" y="52" width="40" height="20" uuid="542398e3-3aab-4c9e-ba9d-13da9b0f743e"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

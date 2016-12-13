@@ -1,0 +1,9 @@
+<?php
+$server="localhost";
+$db="test";
+$user="root";
+$pass="root";
+$version="0.8d";
+$pgport=5432;
+$pchartfolder="./class/pchart2";
+?>

@@ -1,0 +1,99 @@
+<script>
+$('document').ready(function(){	
+	$('#from').datepicker({
+		dateFormat: "dd-mm-yy",
+		onSelect: function(date) {
+            $('#to').val(date);
+            window.setTimeout($.proxy(function() {
+				$("#to").focus();
+			}, this), 10);
+        }
+	});
+	$('#to').datepicker({dateFormat: "dd-mm-yy",onSelect: function(){$("#rc").focus();}});
+	jQuery.fn.reset = function (){
+	  $(this).each (function() { this.reset(); });
+	}
+	
+	$("#resethrj").click(function(event){
+		event.preventDefault();
+		$('#formmasterhrj').reset();
+	});
+	/* $("#carihrj").click(function(event){
+		event.preventDefault();
+		var from = $('#darihrj').val();
+		var to = $('#sampaihrj').val();
+		var pid = $('#idphrj').val();
+		var jenislk = $('#jenislk').val();
+		window.open('<?=site_url().'sikda_reports/report.php?from='?>'+decodeURIComponent(from)+'&to='+decodeURIComponent(to)+'&pid='+decodeURIComponent(pid)+'&jenis='+decodeURIComponent(jenislk));
+	});
+	$("#excelhrj").click(function(event){
+		event.preventDefault();
+		var rc = $('#rc').val();
+		var from = $('#darihrj').val();
+		var to = $('#sampaihrj').val();
+		var pid = $('#idphrj').val();
+		var jenislk = $('#jenislk').val();
+		window.open('<?=base_url().'report_harian/harian_diagnosa_excel_kab?from='?>'+decodeURIComponent(from)+'&to='+decodeURIComponent(to)+'&pid='+decodeURIComponent(pid)+'&jenis='+decodeURIComponent(jenislk)+'&rc='+decodeURIComponent(rc));
+	}); */
+	
+	/* $("#htmlhrj").click(function(event){
+		event.preventDefault();
+		var propinsi = $('#provinsit_pendaftaranadd').val();
+		var kabupaten = $('#kabupaten_kotat_pendaftaranadd').val();
+		var from = $('#from').val();
+		var to = $('#to').val();
+		
+		var url = '';
+		achtungShowLoader();	
+		  
+		achtungHideLoader();
+		
+		//window.open('<?=base_url().'Report_ppjk/sepuluhbesarkab_html?from='?>'+decodeURIComponent(from)+'&to='+decodeURIComponent(to)+'&pid='+decodeURIComponent(pid)+'&jenis='+decodeURIComponent(jenislk)+'&rc='+decodeURIComponent(rc));
+	}); */
+	
+	$("#formmasterhrj").ajaxForm({ // initialize the plugin
+        // any other options,
+        beforeSubmit: function () {
+            achtungShowLoader();	
+        },
+        success: function (returnData) {
+            achtungHideLoader();
+			$('#divLap').html(returnData);
+        }
+    });
+	$("#kabupaten_kotat_pendaftaranadd").remoteChained("#provinsit_pendaftaranadd", "<?=site_url('t_masters/getKabupatenByProvinceId')?>");
+})
+</script>
+<style>
+/*.ui-datepicker-calendar {
+    display: none;
+    }*/
+#formmasterhrj fieldset{
+	margin:0 13px 0 13px; 
+}
+</style>
+<div class="mycontent">
+<div class="formtitle">Upload Data Agregat</div>
+	<div id="result"></div>
+
+	<form id="formmasterhrj" action="<?=site_url('Report_ppjk/upload_data')?>" method="post" enctype="multipart/form-data">
+		<div class="gridtitle">&nbsp;</div>	
+		<fieldset>
+			<span>				
+				<input type="file" name="fileToUpload" id="fileToUpload">
+			</span>
+			<span>						
+				<!--<input type="submit" class="cari" value="&nbsp;Lihat Laporan&nbsp;" id="carihrj"/>-->
+				<!--<input type="submit" class="cari" value="&nbsp;Cetak Excel&nbsp;" id="excelhrj"/>-->
+				<input type="submit" class="cari" value="&nbsp;Upload Excel&nbsp;" id="submit"/>
+				<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resethrj"/>
+				<input type="hidden" name="idphrj" id="idphrj" value="<?=$this->session->userdata('group_id')=='kabupaten'?$this->session->userdata('kd_kabupaten'):$this->session->userdata('kd_puskesmas')?>" />
+				<input type="hidden" name="jenislk" id="jenislk" value="<?=$this->session->userdata('group_id')=='kabupaten'?'rpt_hrj_kb':'rpt_hrj'?>" />
+				
+				<a href="">Download Template Excel</a>
+			</span>
+		</fieldset>
+		
+	</form>
+	<div id="divLap"></div>
+</div>

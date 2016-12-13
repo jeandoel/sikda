@@ -1,0 +1,25 @@
+<script type="text/javascript" src="<?=base_url()?>assets/customjs/master_terapi_obat.js"></script>
+
+<div class="mycontent">
+<div id="dialogterapiobat_new" style="color:red;font-size:.75em;display:none" title="Confirmation Required">
+  Hapus Data?
+</div>
+<div class="formtitle">Master Data Terapi Obat</div>
+	<form id="formmaster_terapiobat">
+		<div class="gridtitle">Daftar Data Terapi Obat<span class="tambahdata" id="master_terapiobat_add">Input Data Terapi Obat</span></div>
+		
+		<fieldset style="margin:0 13px 0 13px ">
+						<span>
+						<label>Cari Terapi Obat </label>
+						<input type="text" name="kodeterapiobat" class="kodeterapiobat" id="kodeterapiobatmaster_terapiobat"/>
+						<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carimaster_terapiobat"/>
+						<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetmaster_terapiobat"/>
+						</span>	
+					</fieldset>
+		
+		<div class="paddinggrid">
+		<table id="listmaster_terapiobat"></table>
+		<div id="pagermaster_terapiobat"></div>
+		</div >
+	</form>
+</div>

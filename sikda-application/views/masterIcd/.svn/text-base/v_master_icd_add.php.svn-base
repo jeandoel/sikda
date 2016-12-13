@@ -1,0 +1,97 @@
+<script>
+$(document).ready(function(){
+		$('#formmastericd').ajaxForm({
+			beforeSend: function() {
+				achtungShowLoader();	
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			},
+			complete: function(xhr) {
+				achtungHideLoader();
+				if(xhr.responseText!=='OK'){
+					$.achtung({message: xhr.responseText, timeout:5});
+				}else{
+					$.achtung({message: 'Proses Tambah Data Berhasil', timeout:5});
+					$("#t33","#tabs").empty();
+					$("#t33","#tabs").load('c_master_icd'+'?_=' + (new Date()).getTime());
+				}
+			}
+		});
+})
+$('#tglmastericd').datepicker({dateFormat: "yy-mm-dd",changeYear: true});
+</script>
+<script>
+	$('#backlistmastericd').click(function(){
+		$("#t33","#tabs").empty();
+		$("#t33","#tabs").load('c_master_icd'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div class="mycontent">
+<div class="formtitle">Tambah Master ICD</div>
+<div class="backbutton"><span class="kembali" id="backlistmastericd">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" id="formmastericd" method="post" action="<?=site_url('c_master_icd/addprocess')?>" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>Kode Penyakit</label>
+		<input type="text" name="kode_penyakit" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode ICD Induk</label>
+		<input type="text" name="kode_icd_induk" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Penyakit</label>
+		<input type="text" name="penyakit" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Includes</label>
+		<input type="text" name="includes" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Excludes</label>
+		<input type="text" name="excludes" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Notes</label>
+		<input type="text" name="notes" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Status APP</label>
+		<input type="text" name="status_app" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Description</label>
+		<input type="text" name="description" id="text1" value="" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Is Default</label>
+		<input type="radio" name="is_default" value="1" />1
+		<input type="radio" name="is_default" value="0" />0
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<input type="submit" name="bt1" value="Proses Data"/>
+		</span>
+	</fieldset>	
+</form>
+</div >

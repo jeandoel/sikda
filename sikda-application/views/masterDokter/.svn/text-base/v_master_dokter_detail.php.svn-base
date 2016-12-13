@@ -1,0 +1,51 @@
+<script>
+	$('#backlistmasterDokter').click(function(){
+		$("#t27","#tabs").empty();
+		$("#t27","#tabs").load('c_master_dokter'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div class="mycontent">
+<div class="formtitle">Detail Dokter</div>
+<div class="backbutton"><span class="kembali" id="backlistmasterDokter">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" method="post" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>Kode Dokter</label>
+		<input type="text" readonly name="id" id="textid" value="<?=$data->KD_DOKTER?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Nama</label>
+		<input type="text" readonly name="yangditemui1" id="text1" value="<?=$data->NAMA?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>NIP</label>
+		<input type="text" readonly name="yangditemui2" id="text2" value="<?=$data->NIP?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Jabatan</label>
+		<input type="text" readonly name="yangditemui3" id="text3" value="<?=$data->JABATAN?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Status</label>
+		<input type="text" readonly name="yangditemui4" id="text4" value="<?=$data->STATUS?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Puskesmas</label>
+		<input type="text" readonly name="yangditemui5" id="text5" value="<?=$data->KD_PUSKESMAS?>" />
+		</span>
+	</fieldset>
+</form>
+</div >

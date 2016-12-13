@@ -1,0 +1,93 @@
+<script>
+jQuery().ready(function (){ 
+	jQuery("#listicdpopup").jqGrid({ 
+		url:'c_master_icd/icdxml', 
+		emptyrecords: 'Nothing to display',
+		datatype: "xml", 
+		colNames:['Kode Penyakit','Kode ICD Induk','Penyakit','Description','Action'],
+		rownumbers:true,
+		width: 1021,
+		height: 'auto',
+		mtype: 'POST',
+		altRows     : true,		
+		colModel:[ 
+				{name:'kd',index:'kd', width:15,formatter:formatterAction},
+				{name:'kd_icd_induk',index:'kd_icd_induk', width:99},
+				{name:'penyakit',index:'penyakit', width:99},
+				{name:'description',index:'description', width:99},
+				{name:'myid',index:'myid', width:90,align:'center',hidden:true}
+			],
+			rowNum:5, 
+			rowList:[5,20,30], 
+			pager: jQuery('#pagermastericd'), 
+			viewrecords: true, 
+			sortorder: "desc",
+			beforeRequest:function(){
+				keyword=$('#keywordid').val()?$('#keywordid').val():'';
+				cari=$('#cariicdpopup').val()?$('#cariicdpopup').val():'';
+				$('#listicdpopup').setGridParam({postData:{'keyword':'KD_ICD_INDUK','cari':cari}})
+			}
+	}).navGrid('#pagermastericd',{edit:false,add:false,del:false,search:false});
+	
+	function formatterAction(cellvalue, options, rowObject) {
+		var content = '';
+		return '<input type="checkbox" class="chk" name="chk[]" id="chkicd" />';
+		return content;
+	}	
+	
+	$("#chkicd.chk").live('click', function(){		
+		$("#listicdpopup").find('input[type=checkbox]').each(function() {
+			$(this).change( function(){
+				var colid = $(this).parents('tr:last').attr('id');
+				if( $(this).is(':checked')) {
+					$("#listicdpopup").jqGrid('setSelection', colid );
+					$(this).prop('checked',true);
+					var myCellDataId = jQuery('#listicdpopup').jqGrid('getCell', colid, 'kd_icd_induk');
+					var myCellDatamastericd = jQuery('#listicdpopup').jqGrid('getCell', colid, 'penyakit');
+					$('#<?=$id_caller?> #id_master_icd_hidden').val(myCellDataId);
+					$('#<?=$id_caller?> #master_icd').val(myCellDatamastericd);
+					$("#dialog_master_icd").dialog("close");
+				}
+			});	
+		});
+	});
+	
+	$('form').resize(function(e) {
+		if($("#listicdpopup").getGridParam("records")>0){
+		jQuery('#listicdpopup').setGridWidth(($(this).width()));
+		}
+	});
+	
+	jQuery.fn.reset = function (){
+	  $(this).each (function() { this.reset(); });
+	}
+	$("#reseticdpopup").live('click', function(event){
+		event.preventDefault();
+		$('#formicdpopup').reset();
+		$('#listicdpopup').trigger("reloadGrid");
+	});
+	$("#cariicdpopup").live('click', function(event){
+		event.preventDefault();
+		$('#listicdpopup').trigger("reloadGrid");
+	});
+})
+</script>
+
+<div class="mycontent">
+	<form id="formicdpopup">
+	<div class="gridtitle">Daftar ICD</div>
+		<fieldset style="margin:0 13px 0 13px ">
+			<span>
+				<label>Cari ICD</label>
+				<input type="hidden" name="keyword" class="cari" id="keywordid"/>
+				<input type="text" name="cari" class="cari" id="cariicdpopup"/>
+			</span>
+			<span>
+				<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="cariicdpopup" />
+				<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="reseticdpopup" />
+			</span>
+		</fieldset>
+		<table id="listicdpopup"></table>
+		<div id="pagermastericd"></div>
+	</form>
+</div>

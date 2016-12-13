@@ -1,0 +1,42 @@
+<script>
+	$('#backlistjeniskasus').click(function(){
+		$("#t52","#tabs").empty();
+		$("#t52","#tabs").load('c_master_jenis_kasus'+'?_=' + (new Date()).getTime());
+	})
+</script>
+
+<div class="mycontent">
+<div class="formtitle">Detail Jenis Kasus</div>
+<div class="backbutton"><span class="kembali" id="backlistjeniskasus">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" method="post" enctype="multipart/form-data" id="form1jeniskasusdetail">
+	<fieldset>
+		<span>
+		<label>Kode Jenis Kasus</label>
+		<input type="text" readonly name="kodejeniskasus" id="kodejeniskasus" value="<?=$data->KD_JENIS_KASUS?>" />
+		<input type="hidden" name="id" id="kodejeniskasus" value="<?=$data->KD_JENIS_KASUS?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Jenis Kasus</label>
+		<input type="text" readonly name="jeniskasus" id="jeniskasus" value="<?=$data->JENIS_KASUS?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode ICD Induk</label>
+		<input type="text" name="kodeicd" id="nama_icdinduk_hidden" value="<?=$data->KD_ICD_INDUK?>" readonly />
+		<input type="text" placeholder="" name="nama_icdinduk" id="nama_icdinduk" value="<?=$data->namapenyakit?>" readonly />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Jenis</label>
+		<input type="text" readonly name="kodejenis" id="kodejenis" value="<?=$data->KD_JENIS?>" />
+		</span>
+	</fieldset>
+</form>
+</div >

@@ -1,0 +1,25 @@
+<script type="text/javascript" src="<?=base_url()?>assets/customjs/master_cara_masuk_pasien.js"></script>
+
+<div class="mycontent">
+<div id="dialogcaramasukpasien" style="color:red;font-size:.75em;display:none" title="Confirmation Required">
+  Hapus Data?
+</div>
+<div class="formtitle">Master Cara Masuk Pasien</div>
+	<form id="formmaster_cara_masuk_pasien">
+		<div class="gridtitle">Daftar Cara Masuk Pasien<span class="tambahdata" id="master_cara_masuk_pasien_add">Input Cara Masuk Pasien</span></div>
+		
+		<fieldset style="margin:0 13px 0 13px ">
+						<span>
+						<label>Cari Cara Masuk </label>
+						<input type="text" name="kodecaramasuk" class="kodecaramasuk" id="caripasienmasuk"/>
+						<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carimaster_cara_masuk_pasien"/>
+						<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetmaster_cara_masuk_pasien"/>
+						</span>	
+					</fieldset>
+		
+		<div class="paddinggrid">
+		<table id="listmaster_cara_masuk_pasien"></table>
+		<div id="pagermaster_cara_masuk_pasien"></div>
+		</div >
+	</form>
+</div>

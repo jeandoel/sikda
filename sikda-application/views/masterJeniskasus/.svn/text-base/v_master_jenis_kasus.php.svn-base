@@ -1,0 +1,25 @@
+<script type="text/javascript" src="<?=base_url()?>assets/customjs/master_jenis_kasus.js"></script>
+
+<div class="mycontent">
+<div id="dialogjeniskasus" style="color:red;font-size:.75em;display:none" title="Confirmation Required">
+  Hapus Data?
+</div>
+<div class="formtitle">Master Jenis Kasus</div>
+	<form id="formjeniskasus">
+		<div class="gridtitle">Daftar Jenis Kasus<span class="tambahdata" id="masterjeniskasusadd">Input Jenis Kasus</span></div>
+		
+		<fieldset style="margin:0 13px 0 13px ">
+						<span>
+						<label>Cari Jenis Kasus</label>
+						<input type="text" name="nama" class="nama" id="namajeniskasus"/>
+						<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carijeniskasus" />
+						<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetjeniskasus" />
+						</span>
+					</fieldset>
+		
+		<div class="paddinggrid">
+		<table id="listjeniskasus"></table>
+		<div id="pagerjeniskasus"></div>
+		</div >
+	</form>
+</div>

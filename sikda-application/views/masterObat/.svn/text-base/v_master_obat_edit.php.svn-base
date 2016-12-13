@@ -1,0 +1,103 @@
+<script>
+$(document).ready(function(){
+		$('#obatedit').ajaxForm({
+			beforeSend: function() {
+				achtungShowLoader();	
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			},
+			complete: function(xhr) {
+				achtungHideLoader();
+				if(xhr.responseText!=='OK'){
+					$.achtung({message: xhr.responseText, timeout:5});
+				}else{
+					$.achtung({message: 'Proses Ubah Data Berhasil', timeout:5});
+					$("#t61","#tabs").empty();
+					$("#t61","#tabs").load('c_master_obat'+'?_=' + (new Date()).getTime());
+				}
+			}
+		});
+})
+</script>
+<script>
+	$('#backlistobat').click(function(){
+		$("#t61","#tabs").empty();
+		$("#t61","#tabs").load('c_master_obat'+'?_=' + (new Date()).getTime());
+	})
+	$('#tglobat').datepicker({dateFormat: "yy-mm-dd",changeYear: true});
+</script>
+<div class="mycontent">
+<div class="formtitle">Input Laporan Kasus</div>
+<div class="backbutton"><span class="kembali" id="backlistobat">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" id="obatedit" method="post" action="<?=site_url('c_master_obat/editprocess')?>" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>KODE OBAT</label>
+		<input type="text" name="kode_obat_val" id="text1" value="<?=$data->KD_OBAT_VAL?>" />
+		<input type="hidden" name="kd_obat" id="textid" value="<?=$data->KD_OBAT?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>NAMA OBAT</label>
+		<input type="text" name="nama_obat" id="text2" value="<?=$data->NAMA_OBAT?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>KD GOL OBAT</label>
+		<input type="text" name="kd_gol_obat" value="<?=$data->KD_GOL_OBAT?>" />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>KD SAT KECIL</label>
+		<input type="text" name="kd_sat_kecil" value="<?=$data->KD_SAT_KECIL?>" />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>KD SAT BESAR</label>
+		<input type="text" name="kd_sat_besar" value="<?=$data->KD_SAT_BESAR?>" />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>KD TERAPI OBAT</label>
+		<input type="text" name="kd_ter_obat" value="<?=$data->KD_TERAPI_OBAT?>" />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>GENERIK</label>
+		<input type="text" name="generik" value="<?=$data->GENERIK?>" />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>FRACTION</label>
+		<input type="text" name="fraction" value="<?=$data->FRACTION?>" />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>SINGKATAN</label>
+		<input type="text" name="singkatan" value="<?=$data->SINGKATAN?>" />
+		</span>
+	</fieldset>	
+	<fieldset>
+		<span>
+		<label>IS DEFAULT</label>
+		<input type="text" name="default" value="<?=$data->IS_DEFAULT?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<input type="submit" name="bt1" value="Proses Data"/>
+		</span>
+	</fieldset>
+</form>
+</div >

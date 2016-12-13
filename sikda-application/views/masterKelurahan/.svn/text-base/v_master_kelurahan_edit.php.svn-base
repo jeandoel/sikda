@@ -1,0 +1,59 @@
+<script>
+$(document).ready(function(){
+		$('#formkelurahanmasterkelurahanedit').ajaxForm({
+			beforeSend: function() {
+				achtungShowLoader();	
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			},
+			complete: function(xhr) {
+				achtungHideLoader();
+				if(xhr.responseText!=='OK'){
+					$.achtung({message: xhr.responseText, timeout:5});
+				}else{
+					$.achtung({message: 'Proses Ubah Data Berhasil', timeout:5});
+					$("#t19","#tabs").empty();
+					$("#t19","#tabs").load('c_master_kelurahan'+'?_=' + (new Date()).getTime());
+				}
+			}
+		});
+})
+</script>
+<script>
+	$('#backlistmasterkelurahan').click(function(){
+		$("#t19","#tabs").empty();
+		$("#t19","#tabs").load('c_master_kelurahan'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div class="mycontent">
+<div class="formtitle">Input Kelurahan</div>
+<div class="backbutton"><span class="kembali" id="backlistmasterkelurahan">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" id="formkelurahanmasterkelurahanedit" method="post" action="<?=site_url('c_master_kelurahan/editprocess')?>" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>Kode Kelurahan</label>
+		<input type="text" name="kode_kelurahan" id="kode_kelurahan" value="<?=$data->KD_KELURAHAN?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Kecamatan</label>
+		<input type="text" name="kode_kecamatan" id="kode_kecamatan" value="<?=$data->KD_KECAMATAN?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Kelurahan</label>
+		<input type="text" name="kelurahan" id="kelurahan" value="<?=$data->KELURAHAN?>"  />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<input type="submit" name="bt1" value="Proses Data"/>
+		</span>
+	</fieldset>
+</form>
+</div >

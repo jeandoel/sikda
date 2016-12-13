@@ -1,0 +1,2432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_kunjungan_ri" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="307"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="parameter1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date2" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date1" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2, V.KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'LEVEL_NAME' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'KEPALA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+I.KD_PENYAKIT, I.PENYAKIT,V.UNIT_PELAYANAN ,V.KD_UNIT,V.NM_UNIT,
+COL1_L_B, COL1_P_B, COL2_L_B, COL2_P_B, COL3_L_B, COL3_P_B, COL4_L_B, COL4_P_B, COL5_L_B, COL5_P_B, COL6_L_B, COL6_P_B,
+COL1_L_L, COL1_P_L, COL2_L_L, COL2_P_L, COL3_L_L, COL3_P_L, COL4_L_L, COL4_P_L, COL5_L_L, COL5_P_L, COL6_L_L, COL6_P_L,
+COL7_L_B, COL7_P_B, COL8_L_B, COL8_P_B, COL9_L_B, COL9_P_B, COL10_L_B, COL10_P_B, COL11_L_B, COL11_P_B, COL12_L_B, COL12_P_B,
+COL7_L_L, COL7_P_L, COL8_L_L, COL8_P_L, COL9_L_L, COL9_P_L, COL10_L_L, COL10_P_L, COL11_L_L, COL11_P_L, COL12_L_L, COL12_P_L,
+ (COL1_L_B + COL2_L_B + COL3_L_B + COL4_L_B + COL5_L_B + COL6_L_B + COL7_L_B + COL8_L_B + COL9_L_B + COL10_L_B + COL11_L_B + COL12_L_B) AS TOTAL_L_B,
+ (COL1_L_L + COL2_L_L + COL3_L_L + COL4_L_L + COL5_L_L + COL6_L_L + COL7_L_L + COL8_L_L + COL9_L_L + COL10_L_L + COL11_L_L + COL12_L_L) AS TOTAL_L_L,
+ (COL1_P_B + COL2_P_B + COL3_P_B + COL4_P_B + COL5_P_B + COL6_P_B + COL7_P_B + COL8_P_B + COL9_P_B + COL10_P_B + COL11_P_B + COL12_P_B) AS TOTAL_P_B,
+ (COL1_P_L + COL2_P_L + COL3_P_L + COL4_P_L + COL5_P_L + COL6_P_L + COL7_P_L + COL8_P_L + COL9_P_L + COL10_P_L + COL11_P_L + COL12_P_L) AS TOTAL_P_L,
+ (COL1_L_B + COL2_L_B + COL3_L_B + COL4_L_B + COL5_L_B + COL6_L_B + COL7_L_B + COL8_L_B + COL9_L_B + COL10_L_B + COL11_L_B + COL12_L_B + COL1_L_L + COL2_L_L + COL3_L_L + COL4_L_L + COL5_L_L + COL6_L_L + COL7_L_L + COL8_L_L + COL9_L_L + COL10_L_L + COL11_L_L + COL12_L_L + COL1_P_B + COL2_P_B + COL3_P_B + COL4_P_B + COL5_P_B + COL6_P_B + COL7_P_B + COL8_P_B + COL9_P_B + COL10_P_B + COL11_P_B + COL12_P_B + COL1_P_L + COL2_P_L + COL3_P_L + COL4_P_L + COL5_P_L + COL6_P_L + COL7_P_L + COL8_P_L + COL9_P_L + COL10_P_L + COL11_P_L + COL12_P_L) AS TOTAL FROM (
+SELECT
+V.KD_PUSKESMAS, V.NAMA_PUSKESMAS, V.KD_PENYAKIT, V.UNIT_PELAYANAN ,V.KD_UNIT,V.NM_UNIT,
+#-- Untuk Jenis Kasus Baru ------------
+SUM(IF(JENIS_PASIEN='UMUM' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL1_L_B`,
+SUM(IF(JENIS_PASIEN='UMUM' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL1_P_B`,
+SUM(IF(JENIS_PASIEN='ASKES NEGERI' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL2_L_B`,
+SUM(IF(JENIS_PASIEN='ASKES NEGERI' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL2_P_B`,
+SUM(IF(JENIS_PASIEN='JAMSOSTEK' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL3_L_B`,
+SUM(IF(JENIS_PASIEN='JAMSOSTEK' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL3_P_B`,
+SUM(IF(JENIS_PASIEN='KARYAWAN' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL4_L_B`,
+SUM(IF(JENIS_PASIEN='KARYAWAN' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL4_P_B`,
+SUM(IF(JENIS_PASIEN='KELUARGA KARYAWAN' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL5_L_B`,
+SUM(IF(JENIS_PASIEN='KELUARGA KARYAWAN' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL5_P_B`,
+SUM(IF(JENIS_PASIEN='ASKES SWASTA' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL6_L_B`,
+SUM(IF(JENIS_PASIEN='ASKES SWASTA' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL6_P_B`,
+SUM(IF(JENIS_PASIEN='ASKES SUKARELA' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL7_L_B`,
+SUM(IF(JENIS_PASIEN='ASKES SUKARELA' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL7_P_B`,
+SUM(IF(JENIS_PASIEN='JAMKESMAS' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL8_L_B`,
+SUM(IF(JENIS_PASIEN='JAMKESMAS' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL8_P_B`,
+SUM(IF(JENIS_PASIEN='ASKES PENSIUN' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL9_L_B`,
+SUM(IF(JENIS_PASIEN='ASKES PENSIUN' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL9_P_B`,
+SUM(IF(JENIS_PASIEN='ASKESKIN' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL10_L_B`,
+SUM(IF(JENIS_PASIEN='ASKESKIN' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL10_P_B`,
+SUM(IF(JENIS_PASIEN='GAKIN' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL11_L_B`,
+SUM(IF(JENIS_PASIEN='GAKIN' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL11_P_B`,
+SUM(IF(JENIS_PASIEN='JAMKESDA' AND SEX='L' AND JNS_KASUS='Baru', 1,0)) AS `COL12_L_B`,
+SUM(IF(JENIS_PASIEN='JAMKESDA' AND SEX='P' AND JNS_KASUS='Baru', 1,0)) AS `COL12_P_B`,
+#-- Untuk Jenis Kasus Lama ------------
+SUM(IF(JENIS_PASIEN='UMUM' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL1_L_L`,
+SUM(IF(JENIS_PASIEN='UMUM' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL1_P_L`,
+SUM(IF(JENIS_PASIEN='ASKES NEGERI' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL2_L_L`,
+SUM(IF(JENIS_PASIEN='ASKES NEGERI' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL2_P_L`,
+SUM(IF(JENIS_PASIEN='JAMSOSTEK' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL3_L_L`,
+SUM(IF(JENIS_PASIEN='JAMSOSTEK' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL3_P_L`,
+SUM(IF(JENIS_PASIEN='KARYAWAN' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL4_L_L`,
+SUM(IF(JENIS_PASIEN='KARYAWAN' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL4_P_L`,
+SUM(IF(JENIS_PASIEN='KELUARGA KARYAWAN' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL5_L_L`,
+SUM(IF(JENIS_PASIEN='KELUARGA KARYAWAN' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL5_P_L`,
+SUM(IF(JENIS_PASIEN='ASKES SWASTA' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL6_L_L`,
+SUM(IF(JENIS_PASIEN='ASKES SWASTA' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL6_P_L`,
+SUM(IF(JENIS_PASIEN='ASKES SUKARELA' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL7_L_L`,
+SUM(IF(JENIS_PASIEN='ASKES SUKARELA' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL7_P_L`,
+SUM(IF(JENIS_PASIEN='JAMKESMAS' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL8_L_L`,
+SUM(IF(JENIS_PASIEN='JAMKESMAS' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL8_P_L`,
+SUM(IF(JENIS_PASIEN='ASKES PENSIUN' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL9_L_L`,
+SUM(IF(JENIS_PASIEN='ASKES PENSIUN' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL9_P_L`,
+SUM(IF(JENIS_PASIEN='ASKESKIN' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL10_L_L`,
+SUM(IF(JENIS_PASIEN='ASKESKIN' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL10_P_L`,
+SUM(IF(JENIS_PASIEN='GAKIN' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL11_L_L`,
+SUM(IF(JENIS_PASIEN='GAKIN' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL11_P_L`,
+SUM(IF(JENIS_PASIEN='JAMKESDA' AND SEX='L' AND JNS_KASUS='Lama', 1,0)) AS `COL12_L_L`,
+SUM(IF(JENIS_PASIEN='JAMKESDA' AND SEX='P' AND JNS_KASUS='Lama', 1,0)) AS `COL12_P_L`
+FROM vw_rpt_penyakitpasien AS V
+WHERE (TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) AND KD_PUSKESMAS=$P{parameter1}
+ AND UNIT_PELAYANAN='RI'
+GROUP BY V.KD_PUSKESMAS, V.NAMA_PUSKESMAS,
+V.KD_UNIT
+) V INNER JOIN mst_icd I ON I.KD_PENYAKIT=V.KD_PENYAKIT
+ORDER BY I.KD_PENYAKIT, I.PENYAKIT;]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.String"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KD_PENYAKIT" class="java.lang.String"/>
+	<field name="PENYAKIT" class="java.lang.String"/>
+	<field name="UNIT_PELAYANAN" class="java.lang.String"/>
+	<field name="KD_UNIT" class="java.lang.String"/>
+	<field name="NM_UNIT" class="java.lang.String"/>
+	<field name="COL1_L_B" class="java.math.BigDecimal"/>
+	<field name="COL1_P_B" class="java.math.BigDecimal"/>
+	<field name="COL2_L_B" class="java.math.BigDecimal"/>
+	<field name="COL2_P_B" class="java.math.BigDecimal"/>
+	<field name="COL3_L_B" class="java.math.BigDecimal"/>
+	<field name="COL3_P_B" class="java.math.BigDecimal"/>
+	<field name="COL4_L_B" class="java.math.BigDecimal"/>
+	<field name="COL4_P_B" class="java.math.BigDecimal"/>
+	<field name="COL5_L_B" class="java.math.BigDecimal"/>
+	<field name="COL5_P_B" class="java.math.BigDecimal"/>
+	<field name="COL6_L_B" class="java.math.BigDecimal"/>
+	<field name="COL6_P_B" class="java.math.BigDecimal"/>
+	<field name="COL1_L_L" class="java.math.BigDecimal"/>
+	<field name="COL1_P_L" class="java.math.BigDecimal"/>
+	<field name="COL2_L_L" class="java.math.BigDecimal"/>
+	<field name="COL2_P_L" class="java.math.BigDecimal"/>
+	<field name="COL3_L_L" class="java.math.BigDecimal"/>
+	<field name="COL3_P_L" class="java.math.BigDecimal"/>
+	<field name="COL4_L_L" class="java.math.BigDecimal"/>
+	<field name="COL4_P_L" class="java.math.BigDecimal"/>
+	<field name="COL5_L_L" class="java.math.BigDecimal"/>
+	<field name="COL5_P_L" class="java.math.BigDecimal"/>
+	<field name="COL6_L_L" class="java.math.BigDecimal"/>
+	<field name="COL6_P_L" class="java.math.BigDecimal"/>
+	<field name="COL7_L_B" class="java.math.BigDecimal"/>
+	<field name="COL7_P_B" class="java.math.BigDecimal"/>
+	<field name="COL8_L_B" class="java.math.BigDecimal"/>
+	<field name="COL8_P_B" class="java.math.BigDecimal"/>
+	<field name="COL9_L_B" class="java.math.BigDecimal"/>
+	<field name="COL9_P_B" class="java.math.BigDecimal"/>
+	<field name="COL10_L_B" class="java.math.BigDecimal"/>
+	<field name="COL10_P_B" class="java.math.BigDecimal"/>
+	<field name="COL11_L_B" class="java.math.BigDecimal"/>
+	<field name="COL11_P_B" class="java.math.BigDecimal"/>
+	<field name="COL12_L_B" class="java.math.BigDecimal"/>
+	<field name="COL12_P_B" class="java.math.BigDecimal"/>
+	<field name="COL7_L_L" class="java.math.BigDecimal"/>
+	<field name="COL7_P_L" class="java.math.BigDecimal"/>
+	<field name="COL8_L_L" class="java.math.BigDecimal"/>
+	<field name="COL8_P_L" class="java.math.BigDecimal"/>
+	<field name="COL9_L_L" class="java.math.BigDecimal"/>
+	<field name="COL9_P_L" class="java.math.BigDecimal"/>
+	<field name="COL10_L_L" class="java.math.BigDecimal"/>
+	<field name="COL10_P_L" class="java.math.BigDecimal"/>
+	<field name="COL11_L_L" class="java.math.BigDecimal"/>
+	<field name="COL11_P_L" class="java.math.BigDecimal"/>
+	<field name="COL12_L_L" class="java.math.BigDecimal"/>
+	<field name="COL12_P_L" class="java.math.BigDecimal"/>
+	<field name="TOTAL_L_B" class="java.math.BigDecimal"/>
+	<field name="TOTAL_L_L" class="java.math.BigDecimal"/>
+	<field name="TOTAL_P_B" class="java.math.BigDecimal"/>
+	<field name="TOTAL_P_L" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<sortField name="UNIT"/>
+	<variable name="total" class="java.lang.Integer" calculation="Sum"/>
+	<variable name="total_jlh" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
+	</variable>
+	<variable name="col_1_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL1_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_1_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL1_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_2_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL2_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_2_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL2_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_3_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL3_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_3_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL3_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_4_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL4_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_4_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL4_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_5_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL5_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_5_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL5_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_6_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL6_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_6_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL6_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_7_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL7_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_7_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL7_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_8_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL8_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_8_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL8_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_9_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL9_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_9_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL9_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_10_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL10_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_10_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL10_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_11_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL11_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_11_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL11_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_12_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL12_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_12_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL12_P_B}]]></variableExpression>
+	</variable>
+	<variable name="col_13_l_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_L_B}]]></variableExpression>
+	</variable>
+	<variable name="col_13_P_b" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_P_B}]]></variableExpression>
+	</variable>
+	<variable name="tot_p_b" class="java.lang.Integer" incrementType="Column">
+		<variableExpression><![CDATA[$F{COL1_P}+$F{COL2_P}+$F{COL3_P}+$F{COL4_P}+$F{COL5_P}+$F{COL6_P}+$F{COL7_P}+$F{COL8_P}+$F{COL9_P}+$F{COL10_P}+$F{COL11_P}+$F{COL12_P}]]></variableExpression>
+	</variable>
+	<variable name="tot_l_b" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{COL1_L}+$F{COL2_L}+$F{COL3_L}+$F{COL4_L}+$F{COL5_L}+$F{COL6_L}+$F{COL7_L}+$F{COL8_L}+$F{COL9_L}+$F{COL10_L}+$F{COL11_L}+$F{COL12_L}]]></variableExpression>
+	</variable>
+	<variable name="col_1_l_l" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL1_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_1_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL1_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_2_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL2_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_2_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL2_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_3_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL3_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_3_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL3_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_4_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL4_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_4_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL4_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_5_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL5_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_5_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL5_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_6_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL6_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_6_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL6_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_7_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL7_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_7_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL7_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_8_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL8_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_8_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL8_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_9_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL9_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_9_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL9_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_10_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL10_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_10_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL10_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_11_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL11_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_11_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL11_P_L}]]></variableExpression>
+	</variable>
+	<variable name="col_12_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL12_L_L}]]></variableExpression>
+	</variable>
+	<variable name="col_12_P_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{COL12_P_L}]]></variableExpression>
+	</variable>
+	<variable name="tot_p_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_P_L}]]></variableExpression>
+	</variable>
+	<variable name="tot_l_l" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_L_L}]]></variableExpression>
+	</variable>
+	<group name="puskesmas">
+		<groupExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="23">
+				<textField>
+					<reportElement x="786" y="1" width="15" height="19"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total_jlh}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="21" width="802" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="801" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="802" y="0" width="1" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="244" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_1_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="254" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_1_P_b}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="64" y="2" width="174" height="19"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Jumlah ]]></text>
+				</staticText>
+				<line>
+					<reportElement x="243" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="283" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="324" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="369" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="410" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="452" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="493" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="535" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="578" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="619" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="661" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="703" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="743" y="1" width="1" height="19"/>
+				</line>
+				<textField>
+					<reportElement x="263" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_1_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="275" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_1_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="305" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_2_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="285" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_2_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="315" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_2_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="295" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_2_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="348" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_3_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="325" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_3_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="360" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_3_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="338" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_3_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="391" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_4_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="370" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_4_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="401" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_4_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="381" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_4_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="432" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_5_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="411" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_5_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="443" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_5_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="421" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_5_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="475" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_6_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="453" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_6_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="484" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_6_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="465" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_6_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="516" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_7_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="494" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_7_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="526" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_7_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="505" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_7_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="559" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_8_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="537" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_8_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="569" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_8_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="548" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_8_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="599" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_9_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="579" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_9_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="610" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_9_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="589" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_9_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="642" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_10_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="620" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_10_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="652" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_10_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="632" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_10_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="684" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_11_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="662" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_11_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="694" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_11_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="674" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_11_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="725" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_12_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="704" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_12_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="735" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_12_P_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="715" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_12_P_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="767" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{tot_l_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="744" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_13_l_b}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="777" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{tot_p_l}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="756" y="1" width="9" height="19"/>
+					<textElement>
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{col_13_P_b}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="262" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="304" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="347" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="390" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="430" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="474" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="514" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="558" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="598" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="641" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="683" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="724" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="765" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="785" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="776" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="754" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="734" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="714" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="693" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="672" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="651" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="630" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="608" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="588" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="568" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="547" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="525" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="503" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="483" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="463" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="441" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="420" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="401" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="380" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="358" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="336" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="314" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="294" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="273" y="1" width="1" height="19"/>
+				</line>
+				<line>
+					<reportElement x="253" y="1" width="1" height="19"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="179" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="134" width="19" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="134" width="35" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Umum]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="24" width="793" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Laporan Kunjungan Rawat Inap]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="87" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="108" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="212" y="107" width="28" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="87" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="87" width="216" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="150" y="107" width="62" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="239" y="107" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="53" y="134" width="187" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama Unit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="134" width="37" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Askes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="134" width="45" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Jamsostek]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="134" width="42" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Karyawan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="134" width="46" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Keluarga]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="451" y="134" width="41" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Askes ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="134" width="42" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Askes ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="535" y="134" width="44" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Jamkesmas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="577" y="134" width="41" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Askes ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="622" y="134" width="37" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Askeskin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="664" y="134" width="37" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Gakin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="706" y="134" width="37" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Jamkesda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="745" y="134" width="53" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="129" width="800" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="178" width="801" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="246" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="784" y="153" width="18" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[JML]]></text>
+			</staticText>
+			<line>
+				<reportElement x="244" y="154" width="557" height="1"/>
+			</line>
+			<line>
+				<reportElement x="801" y="129" width="1" height="50"/>
+			</line>
+			<line>
+				<reportElement x="243" y="129" width="1" height="49"/>
+			</line>
+			<line>
+				<reportElement x="0" y="129" width="1" height="49"/>
+			</line>
+			<line>
+				<reportElement x="23" y="129" width="1" height="50"/>
+			</line>
+			<line>
+				<reportElement x="283" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="324" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="369" y="130" width="1" height="49"/>
+			</line>
+			<line>
+				<reportElement x="410" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="452" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="493" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="535" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="578" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="619" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="661" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="703" y="130" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement x="743" y="130" width="1" height="48"/>
+			</line>
+			<staticText>
+				<reportElement x="27" y="134" width="21" height="37"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kode]]></text>
+			</staticText>
+			<line>
+				<reportElement x="50" y="130" width="1" height="49"/>
+			</line>
+			<staticText>
+				<reportElement x="276" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="265" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="263" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="243" y="155" width="19" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="318" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="155" width="22" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="155" width="21" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="351" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="404" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="155" width="19" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="393" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="391" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="445" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="423" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="155" width="19" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="413" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="487" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="468" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="476" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="155" width="19" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="529" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="508" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="495" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="517" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="515" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="495" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="573" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="551" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="538" y="155" width="21" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="560" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="558" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="538" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="613" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="592" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="579" y="155" width="19" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="601" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="598" y="155" width="21" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="580" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="655" y="162" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="634" y="162" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="621" y="154" width="18" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="643" y="162" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="641" y="154" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="621" y="162" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="697" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="677" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="663" y="155" width="21" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="685" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="681" y="155" width="22" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="663" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="737" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="717" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="705" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="726" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="726" y="155" width="19" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="705" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="779" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="758" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="747" y="155" width="19" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="769" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="764" y="155" width="20" height="8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[Lama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="747" y="163" width="5" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[L]]></text>
+			</staticText>
+			<line>
+				<reportElement x="262" y="155" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="304" y="155" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="347" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="390" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="430" y="155" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="474" y="155" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="514" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="558" y="155" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="598" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="641" y="155" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="683" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="724" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="765" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="785" y="154" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="776" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="243" y="163" width="542" height="1"/>
+			</line>
+			<line>
+				<reportElement x="754" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="734" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="714" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="693" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="672" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="651" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="630" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="608" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="588" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="568" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="547" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="525" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="503" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="483" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="463" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="441" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="421" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="401" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="380" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="358" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="336" y="164" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="314" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="294" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="273" y="163" width="1" height="15"/>
+			</line>
+			<line>
+				<reportElement x="253" y="164" width="1" height="15"/>
+			</line>
+			<staticText>
+				<reportElement x="450" y="142" width="46" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Swasta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="142" width="46" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Karyawan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="142" width="46" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Sukarela]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="576" y="142" width="46" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pensiun]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="27" y="3" width="22" height="13"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_UNIT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="244" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL1_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="786" y="3" width="15" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="3" width="18" height="13"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="253" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL1_P_B}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="23" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="801" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="243" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="283" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="324" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="369" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="410" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="452" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="493" y="-1" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="535" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="578" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="619" y="-1" width="1" height="19"/>
+			</line>
+			<line>
+				<reportElement x="661" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="703" y="0" width="1" height="18"/>
+			</line>
+			<line>
+				<reportElement x="743" y="-1" width="1" height="19"/>
+			</line>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="274" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL1_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="263" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL1_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="305" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL2_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="295" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL2_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="315" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL2_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="284" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL2_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="348" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL3_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="338" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL3_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="360" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL3_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="326" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL3_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="391" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL4_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="381" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL4_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="402" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL4_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="370" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL4_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="432" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL5_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="421" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL5_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="442" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL5_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="411" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL5_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="475" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL6_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="465" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL6_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="484" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL6_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="453" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL6_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="515" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL7_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="505" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL7_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="526" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL7_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="494" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL7_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="559" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL8_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="548" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL8_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="569" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL8_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="537" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL8_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="599" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL9_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="589" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL9_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="610" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL9_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="579" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL9_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="642" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL10_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="632" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL10_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="652" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL10_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="620" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL10_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="684" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL11_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="674" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL11_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="694" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL11_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="662" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL11_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="724" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL12_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="715" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL12_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="735" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL12_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="704" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL12_L_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="768" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_L_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="756" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_P_B}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="777" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_P_L}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="744" y="3" width="9" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_L_B}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="17" width="801" height="1"/>
+			</line>
+			<line>
+				<reportElement x="262" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="304" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="347" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="390" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="430" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="474" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="514" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="558" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="598" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="641" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="683" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="724" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="765" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="785" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="776" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="754" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="734" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="714" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="693" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="672" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="651" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="630" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="608" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="588" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="568" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="547" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="525" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="503" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="483" y="-1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="463" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="441" y="-1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="421" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="401" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="380" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="358" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="336" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="314" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="294" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="273" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="253" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="50" y="-1" width="1" height="18"/>
+			</line>
+			<textField>
+				<reportElement x="52" y="0" width="129" height="15"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_UNIT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="5" y="16" width="176" height="20"/>
+				<textElement/>
+				<text><![CDATA[Laporan Kunjungan Rawat Inap]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="681" y="16" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="305" y="16" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="385" y="16" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="6" width="800" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="104" splitType="Stretch">
+			<staticText>
+				<reportElement x="5" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskesmas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="5" y="75" width="176" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

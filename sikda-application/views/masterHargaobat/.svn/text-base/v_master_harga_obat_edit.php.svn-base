@@ -1,0 +1,98 @@
+<script>
+$(document).ready(function(){
+		$('#form1masterhargaobatedit').ajaxForm({
+			beforeSend: function() {
+				achtungShowLoader();	
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			},
+			complete: function(xhr) {
+				achtungHideLoader();
+				if(xhr.responseText!=='OK'){
+					$.achtung({message: xhr.responseText, timeout:5});
+				}else{
+					$.achtung({message: 'Proses Ubah Data Berhasil', timeout:5});
+					$("#t23","#tabs").empty();
+					$("#t23","#tabs").load('c_master_harga_obat'+'?_=' + (new Date()).getTime());
+				}
+			}
+		});
+		
+		$('#nama_obat_hidden').focus(function(){
+			$("#dialogtransaksi_cari_namaobat").dialog({
+				autoOpen: false,
+				modal:true,
+				width: 500,
+				height: 405,
+				buttons : {
+					"Cancel" : function() {
+					  $(this).dialog("close");
+					}
+				}
+			});
+			$('#dialogtransaksi_cari_namaobat').load('c_master_obat/masterobatpopup?id_caller=form1masterhargaobatedit', function() {
+				$("#dialogtransaksi_cari_namaobat").dialog("open");
+			});
+		});
+})
+</script>
+<script>
+	$('#backlistmasterhargaobat').click(function(){
+		$("#t23","#tabs").empty();
+		$("#t23","#tabs").load('c_master_harga_obat'+'?_=' + (new Date()).getTime());
+	})
+</script>
+<div id="dialogtransaksi_cari_namaobat" title="Obat"></div>
+<div class="mycontent">
+<div class="formtitle">Edit Harga Obat</div>
+<div class="backbutton"><span class="kembali" id="backlistmasterhargaobat">kembali ke list</span></div>
+</br>
+
+<span id='errormsg'></span>
+<form name="frApps" id="form1masterhargaobatedit" method="post" action="<?=site_url('c_master_harga_obat/editprocess')?>" enctype="multipart/form-data">
+	<fieldset>
+		<span>
+		<label>Kode Tarif</label>
+		<select name="kd_tarif" id="text1">
+		<option value="BS" <?=$data->KD_TARIF=='BS'?'selected':''?>>BS</option>
+		<option value="AK" <?=$data->KD_TARIF=='AK'?'selected':''?>>AK</option>
+		<option value="AM" <?=$data->KD_TARIF=='AM'?'selected':''?>>AM</option>
+		</select>
+		<input type="hidden" name="id" id="textid" value="<?=$data->idd?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Obat</label>
+		<input type="text" readonly autocomplete="off" name="kd_obat" id="nama_obat_hidden" value="<?=$data->KD_OBAT?>" />
+		<input type="text" placeholder="Nama Obat" readonly autocomplete="off" name="namaobat" id="nama_obat" value="<?=$data->NAMA_OBAT?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Harga Beli</label>
+		<input type="text" autocomplete="off" name="harga_beli" id="text3" value="<?=$data->HARGA_BELI?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Harga Jual</label>
+		<input type="text" autocomplete="off" name="harga_jual" id="text4" value="<?=$data->HARGA_JUAL?>" />
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<label>Kode Milik Obat</label>
+		<select name="kd_milik_obat" id="text5">
+		<option value="DK" <?=$data->KD_MILIK_OBAT=='DK'?'selected':''?>>DK</option>
+		<option value="PKM" <?=$data->KD_MILIK_OBAT=='PKM'?'selected':''?>>PKM</option>
+		</select>
+		</span>
+	</fieldset>
+	<fieldset>
+		<span>
+		<input type="submit" name="bt1" value="Proses Data"/>
+		</span>
+	</fieldset>
+</form>
+</div >

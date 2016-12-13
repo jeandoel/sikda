@@ -1,0 +1,39 @@
+<script type="text/javascript" src="<?=base_url()?>assets/customjs/master_dokter.js"></script>
+
+<div class="mycontent">
+<div id="dialogmasterDokter" style="color:red;font-size:.75em;display:none" title="Confirmation Required">
+  Hapus Data?
+</div>
+<div class="formtitle">Master Dokter & Petugas</div>
+	<form id="formmasterDokter">
+		<div class="gridtitle">Daftar Dokter & Petugas<span class="tambahdata" id="masterDokteradd">Input Dokter / Petugas</span></div>
+		
+		<fieldset style="margin:0 13px 0 13px ">
+						<span>
+						<label>Tanggal Input (dd-mm-yyyy)</label>
+						<input type="text" name="dari" class="dari" id="darimasterDokter"/>
+						sampai
+						<input type="text" name="sampai" class="sampai" id="sampaimasterDokter"/>
+						</span>
+						<span>
+						<label>Cari Berdasarkan</label>
+						<select name="keyword" id="keywordmasterDokter">
+						<option VALUE="KD_DOKTER">KODE PETUGAS</option>
+						<option VALUE="NAMA">NAMA</option>
+						<option VALUE="NIP">NIP</option>
+						<option VALUE="JABATAN">JABATAN</option>
+						<option VALUE="STATUS">STATUS</option>
+						<option VALUE="KD_PUSKESMAS">KODE PUSKESMAS</option>
+						</select>
+						<input type="text" name="carinama" id="carinamamasterDokter"/>
+						<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carimasterDokter"/>
+						<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetmasterDokter"/>
+						</span>
+		</fieldset>
+		
+		<div class="paddinggrid">
+		<table id="listmasterDokter"></table>
+		<div id="pagermasterDokter"></div>
+		</div >
+	</form>
+</div>

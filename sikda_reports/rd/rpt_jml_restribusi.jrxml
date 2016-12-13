@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Laporan Bayar Retribusi" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="parameter1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date2" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date1" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1,
+$P{date2} as dt2,
+ V.KD_PUSKESMAS,
+ V.NAMA_PUSKESMAS,
+(IF(UCASE(V.UNIT_PELAYANAN) = 'RJ', 'RAWAT JALAN','RAWAT INAP')) AS `JENIS_RAWAT`,
+SUM((select JUMLAH_BAYAR from pel_kasir_detail_bayar WHERE KD_PEL_KASIR= V.KD_PEL_KASIR)) AS JUMLAH_BAYAR,
+(select PRODUK from mst_produk where KD_PRODUK= V.KD_PRODUK) AS NM_PRODUK,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE S.KEY_DATA = 'KEPALA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+(SELECT UNIT from mst_unit WHERE KD_UNIT=V.KD_UNIT) AS NAMA_POLI
+FROM vw_rpt_restribusi AS V
+WHERE V.KD_PUSKESMAS = $P{parameter1}
+AND V.TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}
+GROUP BY JENIS_RAWAT, NM_PRODUK, NAMA_POLI ;]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.String"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="JENIS_RAWAT" class="java.lang.String"/>
+	<field name="JUMLAH_BAYAR" class="java.lang.Double"/>
+	<field name="NM_PRODUK" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="NAMA_POLI" class="java.lang.String"/>
+	<variable name="total" class="java.lang.Integer" calculation="Sum"/>
+	<variable name="variable1" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="variable2" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="variable3" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[$F{JUMLAH_BAYAR}]]></variableExpression>
+	</variable>
+	<group name="pkm">
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="unit">
+		<groupExpression><![CDATA[$F{JENIS_RAWAT}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="poli">
+		<groupExpression><![CDATA[$F{NAMA_POLI}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="39">
+				<line>
+					<reportElement x="0" y="0" width="1" height="14"/>
+				</line>
+				<line>
+					<reportElement x="253" y="0" width="1" height="14"/>
+				</line>
+				<line>
+					<reportElement x="471" y="0" width="1" height="15"/>
+				</line>
+				<textField>
+					<reportElement x="362" y="0" width="109" height="14"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{variable3}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="14" width="472" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="jenis">
+		<groupExpression><![CDATA[$F{JENIS_RAWAT}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<textField>
+					<reportElement x="1" y="0" width="73" height="16"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{JENIS_RAWAT}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="74" y="0" width="129" height="16"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Nama Produk :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="255" y="0" width="199" height="16"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Jumlah Restribusi]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18">
+				<staticText>
+					<reportElement x="93" y="4" width="153" height="14"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="175" splitType="Stretch">
+			<staticText>
+				<reportElement x="7" y="18" width="535" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[LAPORAN PEMBAYARAN RESTRIBUSI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="81" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="102" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="102" width="28" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="104" y="81" width="116" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="104" y="101" width="62" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="203" y="102" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="81" width="204" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="174" width="471" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="0" width="471" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement x="253" y="1" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="471" y="0" width="1" height="22"/>
+			</line>
+			<textField>
+				<reportElement x="255" y="3" width="216" height="19"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JUMLAH_BAYAR}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="74" y="3" width="179" height="19"/>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_PRODUK}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="22" width="472" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="3" width="74" height="19"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_POLI}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="133" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="13" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskesmas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="82" width="142" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="113" width="429" height="20"/>
+				<textElement/>
+				<text><![CDATA[Laporan Pembayaran Restribusi ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="454" y="113" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="300" y="113" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="113" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="59" splitType="Stretch"/>
+	</summary>
+</jasperReport>

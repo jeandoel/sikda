@@ -1,0 +1,7 @@
+"2","2190000007","P1704020192","1","Pemeriksaan Bidan ",\N,\N,"10000","23","allmaje","1","allmaje","2014-10-25 00:32:37"
+"2","2190000007","P1704020192","59","Evacuasi Cerumen Prop 1 Telinga ",\N,\N,"10000","1","allmaje","2","allmaje","2014-10-25 00:32:37"
+"2","2190000007","P1704020192","140","Sewa Alat Curetage ",\N,\N,"10000","1","allmaje","3","allmaje","2014-10-25 00:32:37"
+"2","2190000007","P1704020192","6","Pemasangan/Angkat IUD Oleh Dokter Umum ",\N,\N,"10000","1","allmaje","4","allmaje","2014-10-25 00:32:37"
+"2","2190000007","P1704020192","27","Sunat Wanita ",\N,\N,"10000","1","allmaje","5","allmaje","2014-10-25 00:32:37"
+"2","2190000007","P1704020192","59","Evacuasi Cerumen Prop 1 Telinga ",\N,\N,"10000","1","allmaje","6","allmaje","2014-10-25 00:32:37"
+"3","2190000007","P1704020201","5","Pemasangan/Angkat IUD Oleh Dokter Spesialis ",\N,\N,"10000","1","all","1","all","2014-10-25 00:34:52"

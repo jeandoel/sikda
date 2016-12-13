@@ -1,0 +1,19 @@
+$newmenu[0]['title'] 		= "Report P2Jk";
+$newmenu[0]['link'] 		= "";
+$newmenu[0]['isparent'] 	= "true";
+
+$newmenu[1]['title'] 	= "10 Penyakit Terbanyak Rujuk";
+$newmenu[1]['link'] 	= "report_ppjk/sepuluhbesarrujuk";
+
+$newmenu[2]['title'] 	= "10 Penyakit Terbanyak RJ Dan RI";
+$newmenu[2]['link'] 	= "report_ppjk/sepuluhbesarrjrw";
+
+$newmenu[3]['title'] 	= "Rekap Kunjungan";
+$newmenu[3]['link'] 	= "report_ppjk/lapjknpus";
+
+$newmenu[4]['title'] 	= "Rekap Jenis Pasien";
+$newmenu[4]['link'] 	= "report_ppjk/lapjenispasien";
+
+$newmenu[5]['title'] 	= "Upload Agregat";
+$newmenu[5]['link'] 	= "report_ppjk/upload_data";
+

@@ -1,0 +1,91 @@
+<script>
+jQuery().ready(function (){ 
+	jQuery("#listusatuankecilpopup").jqGrid({ 
+		url:'c_master_satuan_kecil/masterusergroupxml', 
+		emptyrecords: 'Nothing to display',
+		datatype: "xml", 
+		colNames:['Pilih','Kode Satuan Kecil Obat','Satuan Kecil Obat','Action'],
+		rownumbers:true,
+		width: 1021,
+		height: 'auto',
+		mtype: 'POST',
+		altRows     : true,		
+		colModel:[ 
+				{name:'id',index:'id', width:15,formatter:formatterAction},
+				{name:'kdsatkclobat',index:'kdsatkclobat', width:15},
+				{name:'satkclobat',index:'satkclobat', width:75},	
+				{name:'myid',index:'myid', width:91,align:'center',hidden:true}
+			],
+			rowNum:5, 
+			rowList:[5,20,30], 
+			pager: jQuery('#pagersatuankecilpopup'), 
+			viewrecords: true, 
+			sortorder: "desc",
+			beforeRequest:function(){
+				kdsatkclobat=$('#satuankecil_mastersatuanpopup').val()?$('#satuankecil_mastersatuanpopup').val():'';
+				$('#listusatuankecilpopup').setGridParam({postData:{'kdsatkclobat':kdsatkclobat}})
+			}
+	}).navGrid('#pagersatuankecilpopup',{edit:false,add:false,del:false,search:false});
+	
+	function formatterAction(cellvalue, options, rowObject) {
+		var content = '';
+		return '<input type="checkbox" class="chk" name="chk[]" id="chkkec" />';
+		return content;
+	}	
+	
+	$("#chkkec.chk").live('click', function(){		
+		$("#listusatuankecilpopup").find('input[type=checkbox]').each(function() {
+			$(this).change( function(){
+				var colid = $(this).parents('tr:last').attr('id');
+				if( $(this).is(':checked')) {
+					$("#listusatuankecilpopup").jqGrid('setSelection', colid );
+					$(this).prop('checked',true);
+					var myCellDataId = jQuery('#listusatuankecilpopup').jqGrid('getCell', colid, 'myid');
+					var myCellDatasatkclobat = jQuery('#listusatuankecilpopup').jqGrid('getCell', colid, 'satkclobat');
+					$('#<?=$id_caller?> #master_satuan_kecil_hidden').val(myCellDataId);
+					$('#<?=$id_caller?> #master_satuan_kecil').val(myCellDatasatkclobat);
+					$("#dialogcari_master_satuan_kecil_id").dialog("close");
+				}
+			});	
+		});
+	});
+	
+	$('form').resize(function(y) {
+		if($("#listusatuankecilpopup").getGridParam("records")>0){
+		jQuery('#listusatuankecilpopup').setGridWidth(($(this).width()));
+		}
+	});
+	
+	jQuery.fn.reset = function (){
+	  $(this).each (function() { this.reset(); });
+	}
+	$("#resetsatuankecilpopup").live('click', function(event){
+		event.preventDefault();
+		$('#formsatuankecilpopup').reset();
+		$('#listusatuankecilpopup').trigger("reloadGrid");
+	});
+	$("#carisatuankecilpopup").live('click', function(event){
+		event.preventDefault();
+		$('#listusatuankecilpopup').trigger("reloadGrid");
+	});
+	
+})
+</script>
+
+<div class="mycontent">
+	<form id="formsatuankecilpopup">
+		<div class="gridtitle">Daftar Satuan Kecil</div>
+		<fieldset style="margin:0 13px 0 13px ">
+			<span>
+				<label>Cari Puskesmas</label>
+				<input type="text" name="kdsatkclobat" class="kdsatkclobat" id="satuankecil_mastersatuanpopup"/>
+			</span>
+			<span>
+				<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carisatuankecilpopup" />
+				<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetsatuankecilpopup" />
+			</span>
+		</fieldset>
+		<table id="listusatuankecilpopup"></table>
+		<div id="pagersatuankecilpopup"></div>
+	</form>
+</div>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<queryString language="SQL">
+		<![CDATA[select 'A' as 'KELOMPOK', 'Gizi' as Program, 'Upaya Penanggulangan Kekurangan Vitamin A' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 1 as iRow
+UNION ALL
+select 'A' as 'KELOMPOK','Gizi' as Program, 'Jumlah anak balita (1-5 th) dapat kapsul vit. A dosis tinggi (200.000 IU) bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 2 as iRow
+UNION ALL
+select 'A' as 'KELOMPOK','Gizi' as Program, 'Jumlah Ibu nifas (s/d 40 hr) dapat kapsul vit. A dosis tinggi (200.000 IU) bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 3 as iRow
+UNION ALL
+select 'A' as 'KELOMPOK','Gizi' as Program, 'Jumlah bayi (6-11 th) dapat kapsul vit. A dosis tinggi (200.000 IU) bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 4 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Ibu hamil dapat tablet tambah darah (Fe) 30 tablet (Fe1) bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 1 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Ibu hamil dapat tablet tambah darah (Fe) 90 tablet (Fe2) bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 2 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Balita diperiksa status anemia bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 3 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Balita yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 4 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah WUS (15 - 45 th) diperiksa status anemia bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 5 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah WUS (15 - 45 th) yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 6 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Remaja Putri (14 - 18 th) diperiksa status anemia bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 7 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Remaja Putri (14 - 18 th) yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 8 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Tenaga Kerja Wanita (nakerwan) diperiksa status anemia bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 9 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Tenaga Kerja Wanita (nakerwan) yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 10 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Ibu hamil diperiksa status anemia bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 11 as iRow
+UNION ALL
+select 'B' as 'KELOMPOK', 'Upaya Penanggulangan Anemia Gizi Besi (Fe) as Program', 'Jumlah Ibu hamil yang diperiksa dengan status anemia < 11 gr % bulan ini' as kegiatan, '' as Jumlah1,  '' as Jumlah2,  '' as Jumlah3,  '' as Jumlah4,  '' as Jumlah5,  '' as Jumlah6, 12 as iRow
+]]>
+	</queryString>
+	<field name="KELOMPOK" class="java.lang.String"/>
+	<group name="KELOMPOK">
+		<groupExpression><![CDATA[$F{KELOMPOK}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<textField>
+					<reportElement style="SubTitle" x="47" y="13" width="506" height="24" forecolor="#006600"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{KELOMPOK}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement mode="Opaque" x="0" y="13" width="36" height="24" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+				</rectangle>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<image>
+				<reportElement x="275" y="0" width="300" height="64"/>
+				<imageExpression><![CDATA["leaf_banner_green.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="0" y="13" width="263" height="33"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Leaf Green Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="100" y="46" width="174" height="22"/>
+				<textElement/>
+				<text><![CDATA[Leaf Green SubTitle]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Column header" x="433" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="513" y="0" width="40" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="0" y="0" width="197" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

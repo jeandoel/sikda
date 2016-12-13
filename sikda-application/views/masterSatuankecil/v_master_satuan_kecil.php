@@ -1,0 +1,25 @@
+<script type="text/javascript" src="<?=base_url()?>assets/customjs/master_satuan_kecil.js"></script>
+
+<div class="mycontent">
+<div id="dialogmastersatuankecil" style="color:red;font-size:.75em;display:none" title="Confirmation Required">
+  Hapus Data?
+</div>
+<div class="formtitle">Master Satuan Kecil</div>
+	<form id="formmastersatuankecil">
+		<div class="gridtitle">Daftar Satuan Kecil<span class="tambahdata" id="v_master_satuan_kecil_add">Input Satuan Kecil</span></div>
+		
+		<fieldset style="margin:0 13px 0 13px ">
+						<span>
+						<label>Kode Satuan Kecil</label>
+						<input type="text" name="satuankcl" class="satuankcl" id="satuanmastersatuankcl"/>
+						<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="carimastersatuankecil"/>
+						<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetmastersatuankecil"/>
+						</span>
+					</fieldset>
+		
+		<div class="paddinggrid">
+		<table id="listmastersatuankecil"></table>
+		<div id="pagermastersatuanobat"></div>
+		</div >
+	</form>
+</div>

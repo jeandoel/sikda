@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_lb2" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="parameter1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date2" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date1" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+	
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2, $P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'LEVEL_NAME' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'KEPALA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+I.KD_OBAT, I.NAMA_OBAT,I.KD_SAT_KECIL,
+IFNULL(COL_STOKAWAL,'') AS COL_STOKAWAL,
+IFNULL(COL_PENERIMAAN_APBD,'') AS COL_PENERIMAAN_APBD,
+IFNULL(COL_PENERIMAAN_PKM,'') AS COL_PENERIMAAN_PKM,
+IFNULL(COL_PERSEDIAAN_APBD,'') AS COL_PERSEDIAAN_APBD,
+IFNULL(COL_PERSEDIAAN_PKM,'') AS COL_PERSEDIAAN_PKM,
+IFNULL(COL_PEMAKAIAN_APBD,'') AS COL_PEMAKAIAN_APBD,
+IFNULL(COL_PEMAKAIAN_PKM,'') AS COL_PEMAKAIAN_PKM,
+IFNULL(COL_STOKAKHIR_APBD,'') AS COL_STOKAKHIR_APBD,
+IFNULL(COL_STOKAKHIR_PKM,'') AS COL_STOKAKHIR_PKM,
+IFNULL(COL_PERMINTAAN,'') AS COL_PERMINTAAN,
+IFNULL(COL_PEMBERIAN_APBD,'') AS COL_PEMBERIAN_APBD,
+IFNULL(COL_PEMBERIAN_PKM,'') AS COL_PEMBERIAN_PKM
+FROM (
+
+SELECT
+
+A.KD_OBAT,  A.KD_MILIK_OBAT,
+
+SUM(IF(HEADER='STOKAWAL', A.QTY,0)) AS `COL_STOKAWAL`,
+SUM(IF(HEADER='PENERIMAAN' AND KD_MILIK_OBAT = 'APBD', A.QTY,0)) AS `COL_PENERIMAAN_APBD`,
+SUM(IF(HEADER='PENERIMAAN' AND KD_MILIK_OBAT = 'PKM', A.QTY,0)) AS `COL_PENERIMAAN_PKM`,
+SUM(IF(HEADER='PERSEDIAAN' AND KD_MILIK_OBAT = 'APBD', A.QTY,0)) AS `COL_PERSEDIAAN_APBD`,
+SUM(IF(HEADER='PERSEDIAAN' AND KD_MILIK_OBAT = 'PKM', A.QTY,0)) AS `COL_PERSEDIAAN_PKM`,
+SUM(IF(HEADER='PEMAKAIAN' AND KD_MILIK_OBAT = 'APBD', A.QTY,0)) AS `COL_PEMAKAIAN_APBD`,
+SUM(IF(HEADER='PEMAKAIAN' AND KD_MILIK_OBAT = 'PKM', A.QTY,0)) AS `COL_PEMAKAIAN_PKM`,
+SUM(IF(HEADER='STOKAKHIR' AND KD_MILIK_OBAT = 'APBD', A.QTY,0)) AS `COL_STOKAKHIR_APBD`,
+SUM(IF(HEADER='STOKAKHIR' AND KD_MILIK_OBAT = 'PKM', A.QTY,0)) AS `COL_STOKAKHIR_PKM`,
+SUM(IF(HEADER='PERMINTAAN' , A.QTY,0)) AS `COL_PERMINTAAN`,
+SUM(IF(HEADER='PEMBERIAN' AND KD_MILIK_OBAT = 'APBD', A.QTY,0)) AS `COL_PEMBERIAN_APBD`,
+SUM(IF(HEADER='PEMBERIAN' AND KD_MILIK_OBAT = 'PKM', A.QTY,0)) AS `COL_PEMBERIAN_PKM`
+FROM (
+SELECT V.KD_PUSKESMAS, V.KD_OBAT, V.NAMA_OBAT,  'PEMAKAIAN' AS `HEADER`, V.KD_MILIK_OBAT,
+SUM(QTY) AS `QTY` FROM vw_rpt_obat AS V WHERE (TGL_PELAYANAN BETWEEN $P{date1} AND $P{date2}) AND V.KD_PUSKESMAS = $P{parameter1}
+GROUP BY V.KD_PUSKESMAS, V.KD_OBAT, V.NAMA_OBAT, V.KD_MILIK_OBAT
+) A  GROUP BY
+A.KD_OBAT,  A.KD_MILIK_OBAT
+) P LEFT JOIN apt_mst_obat I ON I.KD_OBAT=P.KD_OBAT
+ORDER BY I.NAMA_OBAT;]]>
+
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KD_OBAT" class="java.lang.Integer"/>
+	<field name="NAMA_OBAT" class="java.lang.String"/>
+	<field name="KD_SAT_KECIL" class="java.lang.String"/>
+	<field name="COL_STOKAWAL" class="java.lang.String"/>
+	<field name="COL_PENERIMAAN_APBD" class="java.lang.String"/>
+	<field name="COL_PENERIMAAN_PKM" class="java.lang.String"/>
+	<field name="COL_PERSEDIAAN_APBD" class="java.lang.String"/>
+	<field name="COL_PERSEDIAAN_PKM" class="java.lang.String"/>
+	<field name="COL_PEMAKAIAN_APBD" class="java.lang.String"/>
+	<field name="COL_PEMAKAIAN_PKM" class="java.lang.String"/>
+	<field name="COL_STOKAKHIR_APBD" class="java.lang.String"/>
+	<field name="COL_STOKAKHIR_PKM" class="java.lang.String"/>
+	<field name="COL_PERMINTAAN" class="java.lang.String"/>
+	<field name="COL_PEMBERIAN_APBD" class="java.lang.String"/>
+	<field name="COL_PEMBERIAN_PKM" class="java.lang.String"/>
+	<variable name="total" class="java.lang.Integer" calculation="Sum"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="190" splitType="Stretch">
+			<staticText>
+				<reportElement x="8" y="134" width="29" height="38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="164" width="29" height="38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>1</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="277" y="134" width="61" height="38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SATUAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="277" y="164" width="61" height="38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>3</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="102" y="18" width="598" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="26" isUnderline="false"/>
+				</textElement>
+				
+				<text><![CDATA[LAPORAN BULANAN (LB2) - OBAT]]></text>
+				
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="81" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="102" width="86" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="131" width="800" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="171" y="101" width="28" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="104" y="81" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="195" y="81" width="216" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="104" y="101" width="62" height="20"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="203" y="101" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			
+			<staticText>
+				<reportElement x="41" y="134" width="234" height="38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NAMA OBAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="164" width="234" height="38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>2</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="340" y="134" width="43" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STOK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="340" y="174" width="43" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text>4</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="384" y="134" width="74" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENERIMAAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APBD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>5</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="421" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PKPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="421" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>6</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="497" y="153" width="36" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PKPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="497" y="174" width="36" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>8</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="459" y="134" width="74" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERSEDIAAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="459" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APBD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="459" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>7</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="571" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PKPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="571" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>10</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="534" y="134" width="74" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PEMAKAIAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="609" y="134" width="75" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STOK-AKHIR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="609" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APBD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="609" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>11</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="647" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PKPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="647" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>12</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="534" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APBD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="534" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>9</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="685" y="134" width="37" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERMIN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="762" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PKPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="762" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>15</text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="724" y="134" width="75" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PEMBERIAN]]></text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="724" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APBD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="724" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>14</text>
+			</staticText>
+			
+			<line>
+				<reportElement x="2" y="174" width="800" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="2" y="190" width="800" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="340" y="153" width="43" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AWAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="685" y="153" width="37" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TAAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="685" y="174" width="37" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text>13</text>
+			</staticText>
+			
+			<line>
+				<reportElement x="1" y="132" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="276" y="130" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="339" y="130" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="384" y="131" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="458" y="130" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="532" y="131" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="385" y="153" width="73" height="1"/>
+			</line>
+			<line>
+				<reportElement x="420" y="153" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="458" y="153" width="73" height="1"/>
+			</line>
+			<line>
+				<reportElement x="495" y="154" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="607" y="131" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="532" y="153" width="269" height="1"/>
+			</line>
+			<line>
+				<reportElement x="571" y="154" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="647" y="153" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="761" y="153" width="1" height="36"/>
+			</line>
+			<line>
+				<reportElement x="684" y="131" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="724" y="131" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="800" y="131" width="1" height="58"/>
+			</line>
+			<line>
+				<reportElement x="38" y="131" width="1" height="58"/>
+			</line>
+			
+		</band>
+	</pageHeader>
+	
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="339" y="1" width="43" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_STOKAWAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="384" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PENERIMAAN_APBD}]]></textFieldExpression>
+			</textField>
+			
+			<textField>
+				<reportElement x="8" y="1" width="29" height="13"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="277" y="1" width="61" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_SAT_KECIL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="421" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PENERIMAAN_PKM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="497" y="1" width="36" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PERSEDIAAN_PKM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="459" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PERSEDIAAN_APBD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="609" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_STOKAKHIR_APBD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="571" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PEMAKAIAN_PKM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="647" y="1" width="36" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_STOKAKHIR_PKM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="534" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PEMAKAIAN_APBD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="685" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PERMINTAAN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="762" y="1" width="36" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PEMBERIAN_PKM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="724" y="1" width="37" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COL_PEMBERIAN_APBD}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="15" width="800" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="41" y="2" width="234" height="12"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_OBAT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="-1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="276" y="-1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="339" y="-1" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="384" y="-1" width="1" height="17"/>
+			</line>
+			<line>
+				<reportElement x="420" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="458" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="495" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="532" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="571" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="607" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="647" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="684" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="724" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="761" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="800" y="0" width="1" height="16"/>
+			</line>
+			<line>
+				<reportElement x="38" y="0" width="1" height="16"/>
+			</line>
+		</band>
+	</detail>
+	
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="96" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="76" width="225" height="20"/>
+				<textElement/>
+				<text><![CDATA[LB2]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="683" y="76" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="302" y="76" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="384" y="76" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskemas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="50" width="166" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

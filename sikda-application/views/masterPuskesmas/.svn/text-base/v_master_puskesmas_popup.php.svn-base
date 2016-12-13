@@ -1,0 +1,93 @@
+<script>
+jQuery().ready(function (){ 
+	jQuery("#listpuskesmaspopup").jqGrid({ 
+		url:'c_master_puskesmas/puskesmasxml', 
+		emptyrecords: 'Nothing to display',
+		datatype: "xml", 
+		colNames:['Pilih','Kode Puskesmas','Kode Kecamatan','Puskesmas','Alamat','Action'],
+		rownumbers:true,
+		width: 1021,
+		height: 'auto',
+		mtype: 'POST',
+		altRows     : true,		
+		colModel:[ 
+				{name:'id',index:'id', width:15,formatter:formatterAction}, 
+				{name:'kodepuskesmas',index:'kodepuskesmas', width:90}, 
+				{name:'kodekecamatan',index:'kodekecamatan', width:90,hidden:true}, 
+				{name:'namapuskesmas',index:'namapuskesmas', width:90},
+				{name:'alamat',index:'alamat', width:120,hidden:true},
+				{name:'myid',index:'myid', width:90,align:'center',hidden:true}
+			],
+			rowNum:5, 
+			rowList:[5,20,30], 
+			pager: jQuery('#pagerpuskesmaspopup'), 
+			viewrecords: true, 
+			sortorder: "desc",
+			beforeRequest:function(){
+				nama=$('#namapuskesmaspopup').val()?$('#namapuskesmaspopup').val():'';
+				$('#listpuskesmaspopup').setGridParam({postData:{'nama':nama}})
+			}
+	}).navGrid('#pagerpuskesmaspopup',{edit:false,add:false,del:false,search:false});
+	
+	function formatterAction(cellvalue, options, rowObject) {
+		var content = '';
+		return '<input type="checkbox" class="chk" name="chk[]" id="chkpus" />';
+		return content;
+	}	
+	
+	$("#chkpus.chk").live('click', function(){		
+		$("#listpuskesmaspopup").find('input[type=checkbox]').each(function() {
+			$(this).change( function(){
+				var colid = $(this).parents('tr:last').attr('id');
+				if( $(this).is(':checked')) {
+					$("#listpuskesmaspopup").jqGrid('setSelection', colid );
+					$(this).prop('checked',true);
+					var myCellDataId = jQuery('#listpuskesmaspopup').jqGrid('getCell', colid, 'myid');
+					var myCellDataNamapuskesmas = jQuery('#listpuskesmaspopup').jqGrid('getCell', colid, 'namapuskesmas');
+					$('#<?=$id_caller?> #nama_puskesmas_hidden').val(myCellDataId);
+					$('#<?=$id_caller?> #nama_puskesmas').val(myCellDataNamapuskesmas);
+					$("#dialog_cari_namapuskesmas").dialog("close");
+				}
+			});	
+		});
+	});
+	
+	$('form').resize(function(e) {
+		if($("#listpuskesmaspopup").getGridParam("records")>0){
+		jQuery('#listpuskesmaspopup').setGridWidth(($(this).width()));
+		}
+	});
+	
+	jQuery.fn.reset = function (){
+	  $(this).each (function() { this.reset(); });
+	}
+	$("#resetpuskesmaspopup").live('click', function(event){
+		event.preventDefault();
+		$('#formpuskesmaspopup').reset();
+		$('#listpuskesmaspopup').trigger("reloadGrid");
+	});
+	$("#caripuskesmaspopup").live('click', function(event){
+		event.preventDefault();
+		$('#listpuskesmaspopup').trigger("reloadGrid");
+	});
+	
+})
+</script>
+
+<div class="mycontent">
+	<form id="formpuskesmaspopup">
+		<div class="gridtitle">Daftar Puskesmas</div>
+		<fieldset style="margin:0 13px 0 13px ">
+			<span>
+				<label>Cari Puskesmas</label>
+				<input type="text" name="nama" class="nama" id="namapuskesmaspopup"/>
+			</span>
+			<span>
+				<input type="submit" class="cari" value="&nbsp;Cari&nbsp;" id="caripuskesmaspopup" />
+				<input type="submit" class="reset" value="&nbsp;Reset&nbsp;" id="resetpuskesmaspopup" />
+			</span>
+		</fieldset>
+		<table id="listpuskesmaspopup"></table>
+		<div id="pagerpuskesmaspopup"></div>
+	</form>
+</div>

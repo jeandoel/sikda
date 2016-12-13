@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_gigi_sekolah" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="date1" class="java.util.Date"/>
+	<parameter name="date2" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT $P{date1} as dt1, $P{date2} as dt2,
+$P{parameter1} AS KD_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'LEVEL_NAME' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS NAMA_PUSKESMAS,
+(SELECT S.KEY_VALUE FROM sys_setting AS S WHERE
+S.KEY_DATA = 'KEPALA_PUSKESMAS' AND PUSKESMAS=$P{parameter1} LIMIT 1) AS KEPALA_PUSKESMAS,
+(SELECT P.PROVINSI FROM sys_setting S INNER JOIN mst_provinsi  P
+ON S.KEY_VALUE=P.KD_PROVINSI WHERE
+S.KEY_DATA = 'PROVINSI' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS PROVINSI,
+(SELECT P.KABUPATEN FROM sys_setting S INNER JOIN mst_kabupaten  P
+ON S.KEY_VALUE=P.KD_KABUPATEN WHERE
+S.KEY_DATA = 'KABUPATENKOTA' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KABKOTA,
+(SELECT P.KECAMATAN FROM sys_setting S INNER JOIN mst_kecamatan  P
+ON S.KEY_VALUE=P.KD_KECAMATAN WHERE
+S.KEY_DATA = 'KECAMATAN' AND S.PUSKESMAS=$P{parameter1} LIMIT 1) AS KECAMATAN,
+ '' AS 'PUSTU_YG_ADA',
+ '' AS 'YANG_LAPOR',
+ 'DARI PARAMETER PHP' AS 'TAHUN',
+ '' AS 'NAMA_MENGETAHUI',
+ '' AS 'NIP_MENGETAHUI',
+ '' AS 'LOKASI',
+ 'TANGGAL HARI INI' AS 'TANGGAL',
+ '' AS 'NAMA_PELAPOR',
+ '' AS 'NIP_PELAPOR', X.*
+FROM (
+select  'VARIABLE' as 'JUDUL' ,'Jumlah SD/MI dalam wilayah kerja' as kegiatan, '' as Jumlah, 1 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' ,'Jumlah  murid SD/MI' as kegiatan, '' as Jumlah, 2 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' ,'Jumlah murid kelas 1 SD/MI' as kegiatan, '' as Jumlah, 3 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' ,'Jumlah dokter kecil' as kegiatan, '' as Jumlah, 4 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' ,'Jumlah SD/MI yang dibina UKGS' as kegiatan, '' as Jumlah, 5 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid SD/MI yang dibina UKGS' as kegiatan, '' as Jumlah, 6 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah guru SD/MI pembina UKGS' as kegiatan, '' as Jumlah, 7 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah dokter kecil SD/MI yang telah dibina UKGS' as kegiatan, '' as Jumlah, 8 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah dokter kecil SD/MI yang telah dilatih DHE s.d bulan ini' as kegiatan, '' as Jumlah, 9 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah guru pembina UKGS yang telah dilatih DHE s.d bulan ini' as kegiatan, '' as Jumlah, 10 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid SD/MI yang menerima DHE bulan ini' as kegiatan, '' as Jumlah, 11 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah SD/MI UKGS yang melaksanakan sikat gigi massal dengan pasta gigi fluor bulan ini' as kegiatan, '' as Jumlah, 12 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid SD/MI melaksanakan sikat gigi massal dengan pasta gigi fluor bulan ini' as kegiatan, '' as Jumlah, 13 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah SD/MI UKGS yang mendapatkan pengobatan darurat oleh guru bulan ini' as kegiatan, '' as Jumlah, 14 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I SD/MI yang menjalani skrining kesehatan gigi' as kegiatan, '' as Jumlah, 15 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid SD/MI yang dicabut gigi yang sudah waktunya tanggal' as kegiatan, '' as Jumlah, 16 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I s.d IV yang mendapatkan pelayanan medik gigi dasar atas permintaan' as kegiatan, '' as Jumlah, 17 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I-VI yang perlu pengobatan' as kegiatan, '' as Jumlah, 18 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I-VI yang perlu perawatan' as kegiatan, '' as Jumlah, 19 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I-VI yang telah mendapatkan pengobatan' as kegiatan, '' as Jumlah, 20 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I-VI yang telah mendapatkan perawatan' as kegiatan, '' as Jumlah, 21 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I SD/MI UKGS yang mendapatkan surface Protection M1' as kegiatan, '' as Jumlah, 22 as iRow
+UNION ALL
+select  'VARIABLE' as 'JUDUL' , 'Jumlah murid kelas I-VI yang perlu dirujuk' as kegiatan, '' as Jumlah, 23 as iRow
+)X]]>
+	</queryString>
+	<field name="dt1" class="java.lang.Object"/>
+	<field name="dt2" class="java.lang.Object"/>
+	<field name="KD_PUSKESMAS" class="java.lang.Object"/>
+	<field name="NAMA_PUSKESMAS" class="java.lang.String"/>
+	<field name="KEPALA_PUSKESMAS" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="KABKOTA" class="java.lang.String"/>
+	<field name="KECAMATAN" class="java.lang.String"/>
+	<field name="PUSTU_YG_ADA" class="java.lang.String"/>
+	<field name="YANG_LAPOR" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="NAMA_MENGETAHUI" class="java.lang.String"/>
+	<field name="NIP_MENGETAHUI" class="java.lang.String"/>
+	<field name="LOKASI" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="NAMA_PELAPOR" class="java.lang.String"/>
+	<field name="NIP_PELAPOR" class="java.lang.String"/>
+	<field name="JUDUL" class="java.lang.String"/>
+	<field name="kegiatan" class="java.lang.String"/>
+	<field name="Jumlah" class="java.lang.String"/>
+	<field name="iRow" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="156" splitType="Stretch">
+			<staticText>
+				<reportElement x="175" y="79" width="22" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[s/d]]></text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="202" y="79" width="56" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="59" width="82" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{KD_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="59" width="210" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAMA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="15" y="80" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periode :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="59" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puskesmas :]]></text>
+			</staticText>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="113" y="79" width="56" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="27"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Laporan Usaha Kesehatan GIGI Sekolah (UKGS)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="112" width="202" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Hasil Kegiatan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="113" width="186" height="43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Variabel Kegiatan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="132" width="57" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Jumlah]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="144" width="56" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Seluruhnya]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="132" width="145" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cangkupan Kegiatan UKGS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="144" width="47" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Tahap 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="144" width="49" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Tahap 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="355" y="144" width="49" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Tahap 3]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="112" width="403" height="1"/>
+			</line>
+			<line>
+				<reportElement x="404" y="113" width="1" height="43"/>
+			</line>
+			<line>
+				<reportElement x="0" y="112" width="1" height="43"/>
+			</line>
+			<line>
+				<reportElement x="202" y="112" width="1" height="43"/>
+			</line>
+			<line>
+				<reportElement x="258" y="132" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement x="202" y="131" width="203" height="1"/>
+			</line>
+			<line>
+				<reportElement x="259" y="144" width="145" height="1"/>
+			</line>
+			<line>
+				<reportElement x="354" y="144" width="1" height="12"/>
+			</line>
+			<line>
+				<reportElement x="305" y="144" width="1" height="12"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="16" y="0" width="186" height="20"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kegiatan}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="21" width="403" height="1"/>
+			</line>
+			<line>
+				<reportElement x="1" y="0" width="403" height="1"/>
+			</line>
+			<line>
+				<reportElement x="404" y="1" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="258" y="0" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="202" y="1" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="305" y="1" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="354" y="1" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="1" height="21"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="182" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="134" width="176" height="20"/>
+				<textElement/>
+				<text><![CDATA[Laporan Kesehatan Gigi dan Mulut]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="120" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="238" y="134" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="456" y="134" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="318" y="134" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="13" y="19" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Kepala Puskesmas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="15" y="74" width="176" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEPALA_PUSKESMAS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
